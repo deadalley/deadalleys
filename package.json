@@ -1,0 +1,30 @@
+{
+  "name": "deadalleys-portfolio",
+  "version": "1.0.0",
+  "description": "A modern portfolio website built with Hugo static site generator",
+  "scripts": {
+    "dev": "./dev.sh",
+    "build": "./build.sh",
+    "start": "hugo server --buildDrafts",
+    "clean": "rm -rf public resources .hugo_build.lock"
+  },
+  "keywords": [
+    "hugo",
+    "portfolio",
+    "static-site",
+    "tailwindcss",
+    "responsive",
+    "photography",
+    "blog"
+  ],
+  "author": "DeadAlley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deadalley/deadalleys"
+  },
+  "bugs": {
+    "url": "https://github.com/deadalley/deadalleys/issues"
+  },
+  "homepage": "https://github.com/deadalley/deadalleys#readme"
+}

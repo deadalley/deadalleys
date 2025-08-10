@@ -1,0 +1,42 @@
+{{ define "main" }}
+{{ partial "page-header.html" . }}
+
+<section class="py-12">
+  <div class="container mx-auto px-6">
+    <!-- Blog Posts -->
+    <div class="max-w-4xl mx-auto">
+      {{ range .Pages }}
+      <article class="bg-white rounded-lg shadow-lg p-8 mb-8 hover:shadow-xl transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-4">
+            <span class="text-sm text-gray-500">{{ .Date.Format "January 2, 2006" }}</span>
+            {{ if .Params.tags }}
+            <div class="flex space-x-2">
+              {{ range .Params.tags }}
+              <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                {{ . }}
+              </span>
+              {{ end }}
+            </div>
+            {{ end }}
+          </div>
+          <span class="text-sm text-gray-500">{{ .ReadingTime }} min read</span>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-4">
+          <a href="{{ .Permalink }}" class="text-gray-900 hover:text-blue-600 transition-colors">
+            {{ .Title }}
+          </a>
+        </h2>
+
+        <p class="text-gray-600 mb-6">{{ .Summary }}</p>
+
+        <a href="{{ .Permalink }}" class="text-blue-600 hover:text-blue-800 font-semibold">
+          Read More <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+      </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}

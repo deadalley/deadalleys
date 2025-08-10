@@ -1,0 +1,64 @@
+{{ define "main" }}
+<!-- Hero Section -->
+<section class="hero-section-extended">
+  <div class="hero-overlay"></div>
+  <div class="container mx-auto px-6 text-center relative z-10">
+    <h1 class="text-5xl md:text-6xl font-bold mb-6" style="color: var(--text-primary)">
+      {{ .Site.Title }}
+    </h1>
+    <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto" style="color: var(--text-secondary)">
+      {{ .Site.Params.description }}
+    </p>
+  </div>
+
+  <!-- Scroll Down Indicator -->
+  <div class="scroll-indicator">
+    <button class="scroll-down-btn" onclick="scrollToNextSection()">
+      <i class="fas fa-chevron-down"></i>
+    </button>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20">
+  <div class="container mx-auto px-32">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- GitHub Projects -->
+      <div class="card rounded-2xl p-8 text-center hover-lift">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="
+            background-color: var(--navy-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--navy-light);
+          ">
+          <i class="fab fa-github text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-4 text-accent">development.</h3>
+      </div>
+
+      <!-- Blog -->
+      <div class="card rounded-2xl p-8 text-center hover-lift">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="
+            background-color: var(--navy-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--navy-light);
+          ">
+          <i class="fa fa-rss text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-4 text-accent">blog.</h3>
+      </div>
+
+      <!-- Photo Gallery -->
+      <div class="card rounded-2xl p-8 text-center hover-lift">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="
+            background-color: var(--navy-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--navy-light);
+          ">
+          <i class="fa fa-camera text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-4 text-accent">photography.</h3>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

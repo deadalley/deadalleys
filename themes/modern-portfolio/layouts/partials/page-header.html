@@ -1,0 +1,28 @@
+{{/*
+Page Header Partial
+
+Usage: {{ partial "page-header.html" . }}
+
+This partial creates a consistent page header across all pages.
+It uses the page's .Title and applies consistent styling.
+*/}}
+
+<section class="py-20">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6 text-white">
+        {{ .Title }}
+      </h1>
+      {{/* Optional subtitle/description */}}
+      {{ if .Params.subtitle }}
+      <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+        {{ .Params.subtitle }}
+      </p>
+      {{ else if .Description }}
+      <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+        {{ .Description }}
+      </p>
+      {{ end }}
+    </div>
+  </div>
+</section>

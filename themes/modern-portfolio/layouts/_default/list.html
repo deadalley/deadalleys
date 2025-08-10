@@ -1,0 +1,42 @@
+{{ define "main" }}
+<section class="py-20">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ .Title }}</h1>
+      {{ if .Content }}
+      <div class="prose prose-lg max-w-3xl mx-auto">{{ .Content }}</div>
+      {{ end }}
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      {{ range .Pages }}
+      <article class="bg-white rounded-lg shadow-lg p-8 mb-8 hover:shadow-xl transition-shadow">
+        <h2 class="text-2xl font-bold mb-4">
+          <a href="{{ .Permalink }}" class="text-gray-900 hover:text-blue-600 transition-colors">
+            {{ .Title }}
+          </a>
+        </h2>
+
+        {{ if .Date }}
+        <p class="text-gray-500 text-sm mb-4">
+          {{ .Date.Format "January 2, 2006" }}
+        </p>
+        {{ end }} {{ if .Summary }}
+        <p class="text-gray-600 mb-6">{{ .Summary }}</p>
+        {{ end }}
+
+        <a href="{{ .Permalink }}" class="text-blue-600 hover:text-blue-800 font-semibold">
+          Read More <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+      </article>
+      {{ else }}
+      <div class="text-center py-20">
+        <i class="fas fa-file-alt text-6xl text-gray-300 mb-4"></i>
+        <h2 class="text-2xl font-bold text-gray-600 mb-2">Under construction.</h2>
+        <p class="text-gray-500">Check back soon for updates!</p>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
