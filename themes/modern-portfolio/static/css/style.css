@@ -227,6 +227,69 @@ html {
   }
 }
 
+/* Feature Card Styles */
+.feature-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.feature-card {
+  border: 1px solid rgba(241, 245, 249, 0.08);
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.feature-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(241, 245, 249, 0.15);
+  border-color: rgba(241, 245, 249, 0.2);
+  background: var(--navy-dark);
+}
+
+.feature-card-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  background-color: var(--navy-dark);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card-icon i {
+  color: var(--accent-primary);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-card-icon i {
+  color: var(--accent-light);
+  transform: scale(1.1);
+}
+
+.feature-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--accent-primary);
+  transition: color 0.3s ease;
+}
+
+.feature-card:hover .feature-card-title {
+  color: var(--accent-light);
+}
+
 /* Hover effects */
 .hover-lift {
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -262,55 +325,6 @@ html {
 
 .hover-lift:hover::after {
   left: 100%;
-}
-
-/* Custom animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-/* Updated gradient backgrounds */
-.gradient-bg-1 {
-  background: linear-gradient(
-    135deg,
-    var(--navy-medium) 0%,
-    var(--navy-light) 100%
-  );
-}
-
-.gradient-bg-2 {
-  background: linear-gradient(
-    135deg,
-    var(--accent-dark) 0%,
-    var(--accent-primary) 100%
-  );
-}
-
-.gradient-bg-3 {
-  background: linear-gradient(
-    135deg,
-    var(--text-muted) 0%,
-    var(--text-secondary) 100%
-  );
-}
-
-.gradient-bg-4 {
-  background: linear-gradient(
-    135deg,
-    var(--accent-primary) 0%,
-    var(--accent-light) 100%
-  );
 }
 
 /* Hero Section with Background Image */

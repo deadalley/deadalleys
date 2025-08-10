@@ -24,40 +24,13 @@
   <div class="container mx-auto px-32">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <!-- GitHub Projects -->
-      <div class="card rounded-2xl p-8 text-center hover-lift">
-        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="
-            background-color: var(--navy-dark);
-            color: var(--text-primary);
-            border: 1px solid var(--navy-light);
-          ">
-          <i class="fab fa-github text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-4 text-accent">development.</h3>
-      </div>
+      {{ partial "feature-card.html" (dict "icon" "fab fa-github" "title" "development." "url" "/development") }}
 
       <!-- Blog -->
-      <div class="card rounded-2xl p-8 text-center hover-lift">
-        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="
-            background-color: var(--navy-dark);
-            color: var(--text-primary);
-            border: 1px solid var(--navy-light);
-          ">
-          <i class="fa fa-rss text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-4 text-accent">blog.</h3>
-      </div>
+      {{ partial "feature-card.html" (dict "icon" "fa fa-rss" "title" "blog." "url" "/blog") }}
 
       <!-- Photo Gallery -->
-      <div class="card rounded-2xl p-8 text-center hover-lift">
-        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="
-            background-color: var(--navy-dark);
-            color: var(--text-primary);
-            border: 1px solid var(--navy-light);
-          ">
-          <i class="fa fa-camera text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-4 text-accent">photography.</h3>
-      </div>
+      {{ partial "feature-card.html" (dict "icon" "fa fa-camera" "title" "photography." "url" "/photography") }}
     </div>
   </div>
 </section>

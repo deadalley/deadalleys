@@ -1,0 +1,27 @@
+{{/*
+Feature Card Partial
+
+Usage: {{ partial "feature-card.html" (dict "icon" "fab fa-github" "title" "development." "url" "/development") }}
+
+Parameters:
+- icon: Font Awesome icon class
+- title: Card title text
+- url: Link destination (optional)
+*/}}
+
+{{ $icon := .icon }}
+{{ $title := .title }}
+{{ $url := .url }}
+
+{{ if $url }}
+<a href="{{ $url }}" class="feature-card-link">
+  {{ end }}
+  <div class="feature-card">
+    <div class="feature-card-icon">
+      <i class="{{ $icon }} text-4xl"></i>
+    </div>
+    <h3 class="feature-card-title">{{ $title }}</h3>
+  </div>
+  {{ if $url }}
+</a>
+{{ end }}
