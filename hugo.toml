@@ -17,22 +17,22 @@ weight = 1
 
 [[menu.main]]
 name = "Development"
-url = "/development/"
+url = "development"
 weight = 2
 
 [[menu.main]]
 name = "Blog"
-url = "/blog/"
+url = "blog"
 weight = 3
 
 [[menu.main]]
 name = "Photography"
-url = "/photography/"
+url = "photography"
 weight = 4
 
 [[menu.main]]
 name = "Art"
-url = "/art/"
+url = "art"
 weight = 5
 
 [markup]
