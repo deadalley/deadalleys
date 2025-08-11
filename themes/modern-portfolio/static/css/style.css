@@ -138,6 +138,16 @@ html {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+.project-card {
+  background-color: var(--navy-medium);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
 /* Album Card Styles - matching gallery animations */
 .albums-grid {
   gap: 2rem;
