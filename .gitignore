@@ -3,6 +3,9 @@ public/
 resources/
 .hugo_build.lock
 
+# ImageKit Configuration (contains API keys)
+themes/modern-portfolio/static/js/imagekit-config.js
+
 # OS
 .DS_Store
 .DS_Store?

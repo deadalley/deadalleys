@@ -1,0 +1,48 @@
+{{ define "main" }}
+{{ partial "page-header.html" . }}
+
+<section>
+  <div class="container mx-auto px-6 relative z-10">
+    {{ $folder := .Params.imagekit_folder }}
+
+    {{ if $folder }}
+    {{/* Dynamic ImageKit folder approach - load via JavaScript */}}
+    <div id="loading-message" class="text-center text-white">
+      <div class="loading-spinner"></div>
+      <p>Loading gallery...</p>
+    </div>
+    {{ end }}
+
+    <div class="gallery-grid">
+    </div>
+
+  </div>
+</section>
+
+<!-- Image Carousel Modal -->
+<div id="image-carousel" class="carousel-modal">
+  <div class="carousel-overlay" onclick="closeCarousel()"></div>
+  <div class="carousel-container">
+    <button class="carousel-close" onclick="closeCarousel()">&times;</button>
+    <button class="carousel-nav carousel-prev" onclick="prevImage()">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="carousel-nav carousel-next" onclick="nextImage()">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="carousel-content">
+      <img id="carousel-image" src="" alt="" />
+      <div class="carousel-info">
+        <div id="carousel-counter" class="carousel-counter"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ if $folder }}
+{{ partial "imagekit-config.html" (dict "folder" $folder) }}
+<script src="{{ "js/imagekit-gallery.js" | relURL }}"></script>
+<script src="{{ "js/slide-animations.js" | relURL }}"></script>
+{{ end }}
+
+{{ end }}

@@ -1,11 +1,18 @@
 ---
 title: "Photography"
-imagekit_folder: "Photography"
-# Optional: specify exact images if you want to control the selection
-# images:
-#   - "nature-landscape-01.jpg"
-#   - "urban-architecture-02.jpg"
-#   - "portrait-session-03.jpg"
-#   - "sunset-moment-04.jpg"
-#   - "street-photography-05.jpg"
+layout: "photography-index"
+featured_album:
+  title: "Vintage"
+  imagekit_folder: "photography/vintage"
+  cover_image: "DSC00031_result.jpg"
+albums:
+  - title: "Vintage"
+    imagekit_folder: "photography/vintage"
+    cover_image: "IMG20240408130414_result.jpg"
+  - title: "Nature"
+    imagekit_folder: "photography/nature"
+    cover_image: "IMG20241109111146_result.jpg"
+  - title: "Urban"
+    imagekit_folder: "photography/urban"
+    cover_image: "DSC00031_result.jpg"
 ---

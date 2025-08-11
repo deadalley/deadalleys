@@ -1,0 +1,17 @@
+{{ $baseURL := "https://ik.imagekit.io/deadalley31" }}
+{{ $thumbnailTransform := "?tr=w-400,q-80" }}
+{{ $fullTransform := "?tr=w-1200,q-90" }}
+
+<script>
+  // Gallery configuration
+  window.galleryConfig = {
+    folder: '{{ .folder }}',
+    baseURL: '{{ $baseURL }}',
+    thumbnailTransform: '{{ $thumbnailTransform }}',
+    fullTransform: '{{ $fullTransform }}',
+    apiKey: '' // Add your ImageKit private API key here or use imagekit-config.js
+  };
+</script>
+<script src="{{ "js/base-gallery.js" | relURL }}"></script>
+<script src="{{ "js/imagekit-config.js" | relURL }}"></script>
+<script src="{{ "js/imagekit-config.js" | relURL }}"></script>

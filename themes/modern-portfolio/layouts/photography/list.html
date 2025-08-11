@@ -1,7 +1,14 @@
 {{ define "main" }}
+{{ if eq .Kind "section" }}
+{{ if .Params.layout }}
+{{ partial (printf "%s.html" .Params.layout) . }}
+{{ else }}
+{{ template "photography-index-content" . }}
+{{ end }}
+{{ else }}
 {{ partial "page-header.html" . }}
 
-<section class="py-12">
+<section>
   <div class="container mx-auto px-6 relative z-10">
     {{ $folder := .Params.imagekit_folder }}
     {{ $baseURL := "https://ik.imagekit.io/deadalley31" }}
@@ -19,17 +26,10 @@
     </div>
 
     {{ if $folder }}
-    <script>
-      // Gallery configuration
-      window.galleryConfig = {
-        folder: '{{ $folder }}',
-        baseURL: '{{ $baseURL }}',
-        thumbnailTransform: '{{ $thumbnailTransform }}',
-        fullTransform: '{{ $fullTransform }}',
-        apiKey: ''
-      };
-    </script>
+    {{ partial "imagekit-config.html" (dict "folder" $folder) }}
     <script src="{{ "js/imagekit-gallery.js" | relURL }}"></script>
     {{ end }}
+  </div>
 </section>
+{{ end }}
 {{ end }}

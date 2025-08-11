@@ -1,67 +1,25 @@
 /**
  * ImageKit Gallery Loader
- * Dynamically loads images from ImageKit.io API and creates a responsive gallery
+ * Dynamically loads images from ImageKit.io API and creates a responsive gallery with carousel
  */
 
-class ImageKitGallery {
+class ImageKitGallery extends BaseGallery {
   constructor(config) {
-    this.folder = config.folder;
-    this.baseURL = config.baseURL;
-    this.thumbnailTransform = config.thumbnailTransform;
-    this.fullTransform = config.fullTransform;
-    this.apiKey = config.apiKey;
+    super(config);
     this.galleryGrid = document.querySelector(".gallery-grid");
-    this.loadingMessage = document.getElementById("loading-message");
+    this.currentImageIndex = 0;
+    this.imageFiles = [];
+    this.initializeCarousel();
   }
 
-  async loadImages() {
-    if (!this.folder || !this.galleryGrid) return;
-
-    try {
-      const apiUrl = `https://api.imagekit.io/v1/files?path=${encodeURIComponent(
-        this.folder
-      )}&includeFolder=false`;
-
-      const response = await fetch(apiUrl, {
-        headers: {
-          Authorization: `Basic ${btoa(this.apiKey + ":")}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
-      }
-
-      const files = await response.json();
-
-      // Filter only image files
-      const imageFiles = this.filterImageFiles(files);
-
-      if (imageFiles.length === 0) {
-        this.showNoImagesMessage();
-        return;
-      }
-
-      // Remove loading message
-      if (this.loadingMessage) {
-        this.loadingMessage.remove();
-      }
-
-      // Create gallery items
-      this.createGalleryItems(imageFiles);
-    } catch (error) {
-      console.error("Error loading gallery images:", error);
-      this.showErrorMessage(error.message);
-    }
+  renderGallery(imageFiles) {
+    if (!this.galleryGrid) return;
+    this.imageFiles = imageFiles;
+    this.createGalleryItems(imageFiles);
   }
 
-  filterImageFiles(files) {
-    const imageExtensions = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
-    return files.filter(
-      (file) =>
-        file.fileType === "image" &&
-        imageExtensions.some((ext) => file.name.toLowerCase().endsWith(ext))
-    );
+  hideLoadingMessage() {
+    super.hideLoadingMessage();
   }
 
   createGalleryItems(imageFiles) {
@@ -72,13 +30,26 @@ class ImageKitGallery {
   }
 
   createGalleryItem(file, index) {
-    const galleryItem = document.createElement("a");
-    galleryItem.href = file.url + this.fullTransform;
-    galleryItem.target = "_blank";
-    galleryItem.className = "gallery-item";
-    galleryItem.style.opacity = "0";
-    galleryItem.style.transform = "translateY(20px)";
-    galleryItem.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+    const galleryItem = document.createElement("div");
+
+    // Add slide-in animation classes
+    const delayClasses = [
+      "slide-in-delay-1",
+      "slide-in-delay-2",
+      "slide-in-delay-3",
+      "slide-in-delay-4",
+      "slide-in-delay-5",
+      "slide-in-delay-6",
+    ];
+    const delayClass = delayClasses[index % delayClasses.length];
+
+    galleryItem.className = `gallery-item slide-in-bottom ${delayClass}`;
+    galleryItem.style.cursor = "pointer";
+
+    // Add click handler for carousel
+    galleryItem.addEventListener("click", () => {
+      this.openCarousel(index);
+    });
 
     const img = document.createElement("img");
     img.src = file.url + this.thumbnailTransform;
@@ -87,10 +58,7 @@ class ImageKitGallery {
 
     // Handle image load success
     img.onload = () => {
-      setTimeout(() => {
-        galleryItem.style.opacity = "1";
-        galleryItem.style.transform = "translateY(0)";
-      }, index * 100); // Stagger the animations
+      img.classList.add("loaded");
     };
 
     // Handle image load error (skip broken images)
@@ -102,23 +70,102 @@ class ImageKitGallery {
     return galleryItem;
   }
 
-  generateAltText(filename) {
-    return filename
-      .replace(/\.[^/.]+$/, "") // Remove extension
-      .replace(/[-_]/g, " ") // Replace hyphens and underscores with spaces
-      .trim();
+  initializeCarousel() {
+    // Add global carousel functions to window object
+    window.openCarousel = (index) => this.openCarousel(index);
+    window.closeCarousel = () => this.closeCarousel();
+    window.nextImage = () => this.nextImage();
+    window.prevImage = () => this.prevImage();
+
+    // Add keyboard event listener
+    document.addEventListener("keydown", (e) => {
+      const carousel = document.getElementById("image-carousel");
+      if (carousel && carousel.style.display === "flex") {
+        switch (e.key) {
+          case "Escape":
+            this.closeCarousel();
+            break;
+          case "ArrowLeft":
+            this.prevImage();
+            break;
+          case "ArrowRight":
+            this.nextImage();
+            break;
+        }
+      }
+    });
+  }
+
+  openCarousel(index) {
+    if (!this.imageFiles || this.imageFiles.length === 0) return;
+
+    this.currentImageIndex = index;
+    const carousel = document.getElementById("image-carousel");
+    const carouselImage = document.getElementById("carousel-image");
+    const carouselCounter = document.getElementById("carousel-counter");
+
+    if (carousel && carouselImage && carouselCounter) {
+      const currentFile = this.imageFiles[this.currentImageIndex];
+      carouselImage.src = currentFile.url + this.fullTransform;
+      carouselImage.alt = this.generateAltText(currentFile.name);
+
+      carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
+        this.imageFiles.length
+      }`;
+
+      carousel.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  closeCarousel() {
+    const carousel = document.getElementById("image-carousel");
+    if (carousel) {
+      carousel.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  }
+
+  nextImage() {
+    if (!this.imageFiles || this.imageFiles.length === 0) return;
+
+    this.currentImageIndex =
+      (this.currentImageIndex + 1) % this.imageFiles.length;
+    this.updateCarouselImage();
+  }
+
+  prevImage() {
+    if (!this.imageFiles || this.imageFiles.length === 0) return;
+
+    this.currentImageIndex =
+      this.currentImageIndex === 0
+        ? this.imageFiles.length - 1
+        : this.currentImageIndex - 1;
+    this.updateCarouselImage();
+  }
+
+  updateCarouselImage() {
+    const carouselImage = document.getElementById("carousel-image");
+    const carouselCounter = document.getElementById("carousel-counter");
+
+    if (
+      carouselImage &&
+      carouselCounter &&
+      this.imageFiles[this.currentImageIndex]
+    ) {
+      const currentFile = this.imageFiles[this.currentImageIndex];
+      carouselImage.src = currentFile.url + this.fullTransform;
+      carouselImage.alt = this.generateAltText(currentFile.name);
+      carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
+        this.imageFiles.length
+      }`;
+    }
   }
 
   showNoImagesMessage() {
     if (this.loadingMessage) {
       this.loadingMessage.innerHTML =
         '<p class="text-white">No images found in the Photography folder.</p>';
-    }
-  }
-
-  showErrorMessage(message) {
-    if (this.loadingMessage) {
-      this.loadingMessage.innerHTML = `<p class="text-red-400">Failed to load gallery images: ${message}</p>`;
     }
   }
 }
@@ -129,16 +176,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const galleryGrid = document.querySelector(".gallery-grid");
   if (!galleryGrid) return;
 
-  // Get configuration from HTML data attributes or global variables
-  const config = {
-    folder: window.galleryConfig?.folder || "",
-    baseURL: window.galleryConfig?.baseURL || "",
-    thumbnailTransform: window.galleryConfig?.thumbnailTransform || "",
-    fullTransform: window.galleryConfig?.fullTransform || "",
-    apiKey: window.galleryConfig?.apiKey || "",
-  };
+  const config = GalleryConfig.get();
 
-  if (config.folder && config.apiKey) {
+  if (GalleryConfig.validate(config)) {
     const gallery = new ImageKitGallery(config);
     gallery.loadImages();
   }
