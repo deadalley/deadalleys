@@ -11,7 +11,7 @@
       <div class="hidden md:flex space-x-8">
         <a href="{{ .Site.BaseURL }}" class="nav-link font-medium">Home</a>
         {{ range .Site.Sections.ByParam "order" }}
-        <a href="{{ .Section }}" class="nav-link font-medium">{{ .Title }}</a>
+        <a href="/{{ .Section }}" class="nav-link font-medium">{{ .Title }}</a>
         {{ end }}
       </div>
 
@@ -27,7 +27,7 @@
     <div id="mobile-menu" class="glassmorphic-mobile-menu hidden md:hidden mt-4 pb-4">
       <a href="{{ .Site.BaseURL }}" class="block py-2 nav-link">Home</a>
       {{ range .Site.Sections.ByParam "order" }}
-      <a href="{{ .Section }}" class="block py-2 nav-link">{{ .Title }}</a>
+      <a href="/{{ .Section }}" class="block py-2 nav-link">{{ .Title }}</a>
       {{ end }}
     </div>
   </nav>
