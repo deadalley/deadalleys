@@ -1,6 +1,7 @@
 ---
 title: "Nature"
-imagekit_folder: "photography/nature"
+imagekit_folder: "photography"
+imagekit_tags: ["nature"]
 layout: "single"
 ---
 

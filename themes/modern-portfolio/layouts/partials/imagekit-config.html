@@ -1,18 +1,24 @@
 {{ $baseURL := "https://ik.imagekit.io/deadalley31" }}
 {{ $thumbnailTransform := "?tr=w-400,q-80" }}
 {{ $fullTransform := "?tr=w-1200,q-90" }}
+{{ $folder := .folder | default "" }}
+{{ $tags := .tags | default slice }}
 
 <script>
   // Inject environment variable into browser
   window.IMAGEKIT_API_KEY = '{{ getenv "IMAGEKIT_API_KEY" }}';
+</script>
 
+<script>
   // Gallery configuration
   window.galleryConfig = {
-    folder: '{{ .folder }}',
+    folder: '{{ $folder }}',
+    tags: {{ $tags | jsonify | safeJS }},
     baseURL: '{{ $baseURL }}',
     thumbnailTransform: '{{ $thumbnailTransform }}',
     fullTransform: '{{ $fullTransform }}',
     apiKey: window.IMAGEKIT_API_KEY || ''
   };
 </script>
+
 <script src="{{ "js/base-gallery.js" | relURL }}"></script>

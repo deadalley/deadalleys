@@ -3,7 +3,7 @@
 {{ if .Params.layout }}
 {{ partial (printf "%s.html" .Params.layout) . }}
 {{ else }}
-{{ template "photography-index-content" . }}
+{{ template "gallery-content" . }}
 {{ end }}
 {{ else }}
 {{ partial "page-header.html" . }}
@@ -11,12 +11,13 @@
 <section>
   <div class="container mx-auto px-6 relative z-10">
     {{ $folder := .Params.imagekit_folder }}
+    {{ $tags := .Params.imagekit_tags }}
     {{ $baseURL := "https://ik.imagekit.io/deadalley31" }}
     {{ $thumbnailTransform := "?tr=w-400,h-300,c-maintain_ratio" }}
     {{ $fullTransform := "?tr=w-1200,h-900,c-maintain_ratio" }}
 
-    {{ if $folder }}
-    {{/* Dynamic ImageKit folder approach - load via JavaScript */}}
+    {{ if and $folder $tags }}
+    {{/* Dynamic ImageKit folder + tags approach - load via JavaScript */}}
     <div id="loading-message" class="text-center text-white">
       <div class="loading-spinner"></div>
       <p>Loading gallery...</p>
@@ -25,8 +26,8 @@
     <div class="gallery-grid">
     </div>
 
-    {{ if $folder }}
-    {{ partial "imagekit-config.html" (dict "folder" $folder) }}
+    {{ if and $folder $tags }}
+    {{ partial "imagekit-config.html" (dict "folder" $folder "tags" $tags) }}
     <script src="{{ "js/imagekit-gallery.js" | relURL }}"></script>
     {{ end }}
   </div>

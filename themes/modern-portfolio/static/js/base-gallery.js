@@ -6,6 +6,7 @@
 class BaseGallery {
   constructor(config) {
     this.folder = config.folder;
+    this.tags = config.tags;
     this.baseURL = config.baseURL;
     this.thumbnailTransform = config.thumbnailTransform;
     this.fullTransform = config.fullTransform;
@@ -15,12 +16,27 @@ class BaseGallery {
   }
 
   async loadImages() {
-    if (!this.folder) return;
+    if (!this.tags || this.tags.length === 0) return;
 
     try {
-      const apiUrl = `https://api.imagekit.io/v1/files?path=${encodeURIComponent(
-        this.folder
-      )}&includeFolder=false`;
+      let apiUrl;
+
+      if (this.folder && this.tags && this.tags.length > 0) {
+        // Use searchQuery to combine folder path and tags
+        const tagsQuery = this.tags.map((tag) => `"${tag}"`).join(", ");
+        const searchQuery = `path:"/${this.folder}/" AND tags IN [${tagsQuery}]`;
+        apiUrl = `https://api.imagekit.io/v1/files?searchQuery=${encodeURIComponent(
+          searchQuery
+        )}&fileType=image`;
+      } else if (this.tags && this.tags.length > 0) {
+        // Fallback to tags only
+        const tagsQuery = this.tags.join(",");
+        apiUrl = `https://api.imagekit.io/v1/files?tags=${encodeURIComponent(
+          tagsQuery
+        )}&includeFolder=false&fileType=image`;
+      } else {
+        return;
+      }
 
       const response = await fetch(apiUrl, {
         headers: {
@@ -101,6 +117,7 @@ class GalleryConfig {
 
     return {
       folder: localConfig.folder || "",
+      tags: localConfig.tags || [],
       baseURL: globalConfig.baseURL || localConfig.baseURL || "",
       thumbnailTransform:
         globalConfig.thumbnailTransform || localConfig.thumbnailTransform || "",
@@ -111,7 +128,7 @@ class GalleryConfig {
   }
 
   static validate(config) {
-    if (!config.folder) return false;
+    if (!config.tags || config.tags.length === 0) return false;
 
     if (!config.apiKey) {
       console.warn(
