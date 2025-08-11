@@ -23,14 +23,10 @@
 <section class="py-20">
   <div class="container mx-auto px-32">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- GitHub Projects -->
-      {{ partial "feature-card.html" (dict "icon" "fab fa-github" "title" "development." "url" "development") }}
-
-      <!-- Blog -->
-      {{ partial "feature-card.html" (dict "icon" "fa fa-rss" "title" "blog." "url" "blog") }}
-
-      <!-- Photo Gallery -->
-      {{ partial "feature-card.html" (dict "icon" "fa fa-camera" "title" "photography." "url" "photography") }}
+      {{ range .Site.Sections.ByParam "order" }}
+      {{ $title := printf "%s." (.Title | lower) }}
+      {{ partial "feature-card.html" (dict "icon" .Params.icon "title" $title "url" .Section) }}
+      {{ end }}
     </div>
   </div>
 </section>

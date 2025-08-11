@@ -30,6 +30,11 @@ name = "Photography"
 url = "/photography/"
 weight = 4
 
+[[menu.main]]
+name = "Art"
+url = "/art/"
+weight = 5
+
 [markup]
 
 [markup.goldmark]
