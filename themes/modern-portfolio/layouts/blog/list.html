@@ -2,9 +2,10 @@
 {{ partial "page-header.html" . }}
 
 <section>
-  <div class="container mx-auto px-6">
+  <div class="container mx-auto px-6 relative z-10">
     <!-- Blog Posts -->
     <div class="max-w-4xl mx-auto">
+      {{ if .Pages }}
       {{ range .Pages }}
       <article class="bg-white rounded-lg shadow-lg p-8 mb-8 hover:shadow-xl transition-shadow">
         <div class="flex items-center justify-between mb-4">
@@ -36,7 +37,17 @@
         </a>
       </article>
       {{ end }}
+      {{ else }}
+      <!-- Under Construction Message -->
+      <div class="text-center py-16">
+        <div class="max-w-md mx-auto">
+          <div class="mb-8">
+            <i class="fas fa-tools text-6xl text-gray-400 mb-4"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-4">Under Construction</h3>
+        </div>
+        {{ end }}
+      </div>
     </div>
-  </div>
 </section>
 {{ end }}

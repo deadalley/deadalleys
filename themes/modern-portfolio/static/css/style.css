@@ -280,6 +280,14 @@ html {
   animation-delay: 0.6s;
 }
 
+/* Animation delay utilities for loading dots */
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
 /* Featured Album Animation */
 .featured-album {
   position: relative;
