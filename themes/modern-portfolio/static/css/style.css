@@ -142,7 +142,31 @@ html {
   border: 1px solid var(--navy-medium);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 40% 60%;
+}
+
+.project-card .project-card-image img {
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  order: 1;
+}
+
+.project-card .project-card-content {
+  order: 2;
+}
+
+.project-card.project-card-reverse {
+  grid-template-columns: 60% 40%;
+}
+
+.project-card.project-card-reverse .project-card-image {
+  order: 2;
+}
+
+.project-card.project-card-reverse .project-card-content {
+  order: 1;
 }
 
 .project-card:hover {
@@ -179,17 +203,6 @@ html {
   line-height: 1.6;
 }
 
-.project-card .prose ul,
-.project-card .prose ol {
-  margin: 1rem 0;
-  padding-left: 1.5rem;
-}
-
-.project-card .prose li {
-  margin: 0.5rem 0;
-  line-height: 1.5;
-}
-
 .project-card .prose ul li {
   list-style-type: disc;
 }
@@ -205,8 +218,6 @@ html {
 
 .project-card .prose.text-right ul,
 .project-card .prose.text-right ol {
-  padding-left: 0;
-  padding-right: 1.5rem;
   list-style-position: inside;
 }
 

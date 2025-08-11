@@ -1,12 +1,13 @@
 {{ $isEven := eq (mod .index 2) 0 }}
 
 <div
-  class="project-card rounded-2xl overflow-hidden relative {{ if $isEven }}flex-row{{ else }}flex-row-reverse{{ end }} h-fit">
-  <div class="h-full">
-    <img src="/{{ .project.Params.image }}" alt="{{ .project.Title }}" class="w-auto h-full object-cover" loading="lazy"
+  class="project-card rounded-2xl overflow-hidden relative grid project-card-grid {{ if not $isEven }}project-card-reverse{{ end }} h-fit">
+  <div class="project-card-image h-full">
+    <img src="/{{ .project.Params.image }}" alt="{{ .project.Title }}" loading="lazy"
       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
   </div>
-  <div class="px-16 py-8 flex flex-col justify-start h-full {{ if $isEven }}text-left{{ else }}text-right{{ end }}">
+  <div
+    class="project-card-content px-16 py-8 flex flex-col justify-start h-full {{ if $isEven }}text-left{{ else }}text-right{{ end }}">
     <div class="mb-8">
       <div class="flex {{ if $isEven }}justify-start{{ else }}justify-end{{ end }}">
         {{ if .project.Params.icon }}
@@ -18,7 +19,7 @@
       <h5>{{ .project.Params.description }}</h5>
     </div>
     {{ if or .project.Params.github .project.Params.live_demo }}
-    <div class="flex gap-4">
+    <div class="flex gap-4 {{ if $isEven }}justify-start{{ else }}justify-end{{ end }}">
       {{ if .project.Params.github }}
       <a href="{{ .project.Params.github }}" target="_blank" class="btn btn-primary">
         <i class="ti ti-brand-github"></i>
@@ -80,6 +81,10 @@
           <i class="ti ti-database"></i>
           {{ else if eq . "mongodb" }}
           <i class="ti ti-database"></i>
+          {{ else if eq . "raspberry pi" }}
+          <i class="ti ti-olympics"></i>
+          {{ else if eq . "dump1090" }}
+          <i class="ti ti-air-traffic-control"></i>
           {{ else }}
           <i class="ti ti-code"></i>
           {{ end }}
