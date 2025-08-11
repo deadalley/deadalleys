@@ -1,6 +1,6 @@
 ---
 title: "Photography"
-layout: "photography-index"
+layout: "gallery"
 featured_album:
   id: "vintage"
   title: "Vintage"
