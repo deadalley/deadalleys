@@ -6,18 +6,30 @@
 </div>
 {{ end }}
 
-{{ if .Params.featured_album }}
+{{ $sectionName := .Section }}
+{{ $pages := where .Site.RegularPages "Section" $sectionName }}
+
+{{/* Find the "all" page for featured album */}}
+{{ $allPages := where $pages ".File.BaseFileName" "all" }}
+{{ $allPage := index $allPages 0 }}
+{{ if $allPage }}
 <!-- Featured Album Section -->
 <div class="mb-16">
-  {{ partial "featured-album.html" .Params.featured_album }}
+  {{ $featuredAlbum := dict "id" "all" "title" $allPage.Title "imagekit_folder" $allPage.Params.imagekit_folder
+  "cover_image" $allPage.Params.cover_image }}
+  {{ partial "featured-album.html" $featuredAlbum }}
 </div>
 {{ end }}
 
-{{ if .Params.albums }}
+{{/* Get all other pages (excluding _index and all) for albums */}}
+{{ $albumPages := where $pages ".File.BaseFileName" "!=" "_index" }}
+{{ $albumPages = where $albumPages ".File.BaseFileName" "!=" "all" }}
+
+{{ if $albumPages }}
 <!-- Albums Grid Section -->
 <div>
   <div class="albums-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {{ range $index, $album := .Params.albums }}
+    {{ range $index, $page := $albumPages }}
     {{ $delayClass := "" }}
     {{ if eq $index 0 }}{{ $delayClass = "slide-in-delay-1" }}{{ end }}
     {{ if eq $index 1 }}{{ $delayClass = "slide-in-delay-2" }}{{ end }}
@@ -26,6 +38,8 @@
     {{ if eq $index 4 }}{{ $delayClass = "slide-in-delay-5" }}{{ end }}
     {{ if eq $index 5 }}{{ $delayClass = "slide-in-delay-6" }}{{ end }}
     <div class="slide-in-bottom {{ $delayClass }}">
+      {{ $album := dict "id" .File.BaseFileName "title" .Title "imagekit_folder" .Params.imagekit_folder
+      "imagekit_tags" .Params.imagekit_tags "cover_image" .Params.cover_image }}
       {{ partial "album-card.html" $album }}
     </div>
     {{ end }}
