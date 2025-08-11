@@ -5,8 +5,8 @@
 <div class="featured-album slide-in-left">
   <a href="{{ $albumURL }}" class="block">
     <div class="relative flex items-center justify-center">
-      <img src="{{ $baseURL }}/{{ .imagekit_folder }}/{{ .cover_image }}?tr=w-800,h-600,c-maintain_ratio"
-        alt="{{ .title }}" class="w-full h-full object-cover" loading="lazy"
+      <img src="{{ $baseURL }}/{{ .imagekit_folder }}/{{ .cover_image }}" alt="{{ .title }}"
+        class="w-full h-full object-cover" loading="lazy"
         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
       <div class="absolute bottom-6 left-6 right-6">
         <h3 class="text-2xl font-bold text-white mb-2">{{ .title }}</h3>

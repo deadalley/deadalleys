@@ -16,18 +16,24 @@ class BaseGallery {
   }
 
   async loadImages() {
-    if (!this.tags || this.tags.length === 0) return;
-
+    console.log("brother");
     try {
       let apiUrl;
 
-      if (this.folder && this.tags && this.tags.length > 0) {
-        // Use searchQuery to combine folder path and tags
-        const tagsQuery = this.tags.map((tag) => `"${tag}"`).join(", ");
-        const searchQuery = `path:"/${this.folder}/" AND tags IN [${tagsQuery}]`;
-        apiUrl = `https://api.imagekit.io/v1/files?searchQuery=${encodeURIComponent(
-          searchQuery
-        )}&fileType=image`;
+      if (this.folder) {
+        if (this.tags && this.tags.length > 0) {
+          // Use searchQuery to combine folder path and tags
+          const tagsQuery = this.tags.map((tag) => `"${tag}"`).join(", ");
+          const searchQuery = `path:"/${this.folder}/" AND tags IN [${tagsQuery}]`;
+          apiUrl = `https://api.imagekit.io/v1/files?searchQuery=${encodeURIComponent(
+            searchQuery
+          )}&fileType=image`;
+        } else {
+          // Fallback to folder only
+          apiUrl = `https://api.imagekit.io/v1/files?path=${encodeURIComponent(
+            this.folder
+          )}&includeFolder=false&fileType=image`;
+        }
       } else if (this.tags && this.tags.length > 0) {
         // Fallback to tags only
         const tagsQuery = this.tags.join(",");
@@ -38,6 +44,7 @@ class BaseGallery {
         return;
       }
 
+      console.log("Fetching images from API:", apiUrl);
       const response = await fetch(apiUrl, {
         headers: {
           Authorization: `Basic ${btoa(this.apiKey + ":")}`,
@@ -128,8 +135,6 @@ class GalleryConfig {
   }
 
   static validate(config) {
-    if (!config.tags || config.tags.length === 0) return false;
-
     if (!config.apiKey) {
       console.warn(
         "ImageKit API key not configured. Images will not load. Please check PHOTOGRAPHY_SETUP.md for configuration instructions."

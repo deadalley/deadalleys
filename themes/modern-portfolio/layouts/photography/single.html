@@ -6,7 +6,7 @@
     {{ $folder := .Params.imagekit_folder }}
     {{ $tags := .Params.imagekit_tags }}
 
-    {{ if and $folder $tags }}
+    {{ if or $folder $tags }}
     {{/* Dynamic ImageKit folder + tags approach - load via JavaScript */}}
     <div id="loading-message" class="text-center text-white">
       <div class="loading-spinner"></div>
@@ -40,7 +40,7 @@
   </div>
 </div>
 
-{{ if and $folder $tags }}
+{{ if or $folder $tags }}
 {{ partial "imagekit-config.html" (dict "folder" $folder "tags" $tags) }}
 <script src="{{ "js/imagekit-gallery.js" | relURL }}"></script>
 <script src="{{ "js/slide-animations.js" | relURL }}"></script>

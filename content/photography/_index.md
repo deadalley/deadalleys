@@ -2,11 +2,10 @@
 title: "Photography"
 layout: "gallery"
 featured_album:
-  id: "vintage"
-  title: "Vintage"
+  id: "all"
+  title: "All photos"
   imagekit_folder: "photography"
-  imagekit_tags: ["vintage"]
-  cover_image: "DSC00031_result.jpg"
+  cover_image: "IMG_20151007_150145_result.jpg"
 albums:
   - id: "vintage"
     title: "Vintage"
