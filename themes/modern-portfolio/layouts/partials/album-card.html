@@ -1,6 +1,6 @@
 {{/* Album Card Component */}}
 {{ $baseURL := "https://ik.imagekit.io/deadalley31" }}
-{{ $albumURL := printf "/%s/" .imagekit_folder }}
+{{ $albumURL := .id }}
 
 <div class="album-card">
   <a href="{{ $albumURL }}" class="block">

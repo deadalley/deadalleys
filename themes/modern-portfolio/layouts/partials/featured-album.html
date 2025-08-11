@@ -1,6 +1,6 @@
 {{/* Featured Album Component */}}
 {{ $baseURL := "https://ik.imagekit.io/deadalley31" }}
-{{ $albumURL := printf "/%s/" .imagekit_folder }}
+{{ $albumURL := .id }}
 
 <div class="featured-album slide-in-left">
   <a href="{{ $albumURL }}" class="block">
