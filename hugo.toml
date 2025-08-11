@@ -37,6 +37,11 @@ weight = 4
 [markup.goldmark.renderer]
 unsafe = true
 
+[security]
+
+[security.funcs]
+getenv = ["^IMAGEKIT_API_KEY$"]
+
 [caches]
 
 [caches.images]

@@ -3,8 +3,12 @@ public/
 resources/
 .hugo_build.lock
 
-# ImageKit Configuration (contains API keys)
-themes/modern-portfolio/static/js/imagekit-config.js
+# Environment Variables
+.env
+.env.local
+.env.production
+.env.development
+
 
 # OS
 .DS_Store

@@ -50,6 +50,7 @@ jobs:
         env:
           HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
           HUGO_ENVIRONMENT: production
+          IMAGEKIT_API_KEY: ${{ secrets.IMAGEKIT_API_KEY }}
         run: |
           hugo \
             --minify \
