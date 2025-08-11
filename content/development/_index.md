@@ -1,11 +1,6 @@
 ---
 title: "Development"
 projects:
-  - id: "booklib-app"
-    title: "BookLib"
-    img: "books.jpeg"
-    icon: "booklib.svg"
-    description: "BookLib is a personal book collection management application. You can easily get an overview of all the books you own or wish to own, as well as categorize them into collections or organize them by authors, genres, language, publisher, and more. Get an insight of your reading preferences with graphs and statistics and keep tracking of your reading goals easily. It also supports importing and exporting your library in JSON and CSV formats. It is built with Nuxt + Vue for web and bundled with Electron for native desktop applications."
   - id: "piplane-tracker"
     title: "PiPlane Tracker"
     img: "planes.jpeg"

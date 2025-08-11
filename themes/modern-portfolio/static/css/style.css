@@ -139,13 +139,134 @@ html {
 }
 
 .project-card {
-  background-color: var(--navy-medium);
+  border: 1px solid var(--navy-medium);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: grid;
+  grid-template-columns: 30% 70%;
 }
 
 .project-card:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(53, 53, 53, 0.3);
+}
+
+/* Project Card Prose Styling */
+.project-card .prose {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.project-card .prose h1,
+.project-card .prose h2,
+.project-card .prose h3,
+.project-card .prose h4,
+.project-card .prose h5,
+.project-card .prose h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.project-card .prose h3 {
+  font-size: 1.125rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.project-card .prose p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.project-card .prose ul,
+.project-card .prose ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.project-card .prose li {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.project-card .prose ul li {
+  list-style-type: disc;
+}
+
+.project-card .prose ol li {
+  list-style-type: decimal;
+}
+
+/* Right-aligned prose for alternating layout */
+.project-card .prose.text-right {
+  text-align: right;
+}
+
+.project-card .prose.text-right ul,
+.project-card .prose.text-right ol {
+  padding-left: 0;
+  padding-right: 1.5rem;
+  list-style-position: inside;
+}
+
+.project-card .prose.text-right li {
+  text-align: right;
+}
+
+/* Ensure list bullets/numbers are visible */
+.project-card .prose ul li::marker,
+.project-card .prose ol li::marker {
+  color: var(--accent-primary);
+}
+
+/* Technology Icons Styling */
+.tech-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--navy-light);
+  transition: all 0.3s ease;
+}
+
+.tech-icon:hover {
+  transform: scale(1.1);
+}
+
+.tech-icon i {
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.tech-icon:hover i {
+  transform: scale(1.1);
+}
+
+/* Tooltip for tech icons */
+.tech-icon::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.tech-icon:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Album Card Styles - matching gallery animations */
@@ -682,28 +803,18 @@ html {
 
 /* Button styles */
 .btn-primary {
-  background: var(--accent-primary);
-  color: var(--navy-dark);
-  border: 1px solid var(--accent-primary);
+  background: var(--navy-dark);
+  color: var(--text-primary);
+  border: 1px solid var(--navy-light);
   transition: all 0.3s ease;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
 }
 
 .btn-primary:hover {
-  background: var(--accent-light);
-  border-color: var(--accent-light);
+  background: var(--navy-medium);
   transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background: transparent;
-  color: var(--accent-primary);
-  border: 1px solid var(--accent-primary);
-  transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-  background: var(--accent-primary);
-  color: var(--navy-dark);
 }
 
 /* Card styles */

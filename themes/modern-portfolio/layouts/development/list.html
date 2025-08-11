@@ -3,10 +3,10 @@
 
 <section>
   <div class="container mx-auto px-6 relative z-10">
-    {{ if .Params.projects }}
+    {{ if .Pages }}
     <!-- Projects content will go here -->
     <div class="flex flex-col gap-8">
-      {{ range $index, $project := .Params.projects }}
+      {{ range $index, $project := .Pages }}
       {{ partial "project-card.html" (dict "project" $project "index" $index "Site" $.Site) }}
       {{ end }}
     </div>
