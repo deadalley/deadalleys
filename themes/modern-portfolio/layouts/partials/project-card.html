@@ -1,51 +1,47 @@
 {{ $isEven := eq (mod .index 2) 0 }}
 
 <div class="project-card {{ if not $isEven }}project-card-reverse{{ end }}">
-  <div class="project-card-image">
-    <img src="/{{ .project.Params.image }}" alt="{{ .project.Title }}" loading="lazy"
+  <div class="image">
+    <img src="{{ .Site.BaseURL }}{{ .project.Params.image }}" alt="{{ .project.Title }}" loading="lazy"
       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
   </div>
-  <div
-    class="project-card-content {{ if $isEven }}project-card-content-even{{ else }}project-card-content-odd{{ end }}">
-    <div class="project-card-header">
-      <div
-        class="project-card-title-row {{ if $isEven }}project-card-title-even{{ else }}project-card-title-odd{{ end }}">
+  <div class="content md:{{ if $isEven }}text-left{{ else }}text-right{{ end }}">
+    <div class="header">
+      <div class="flex justify-start md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}">
         {{ if .project.Params.icon }}
-        <img src="/{{ .project.Params.icon }}" alt="{{ .project.Title }} Icon" class="project-card-icon" loading="lazy"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <img src="{{ .Site.BaseURL }}{{ .project.Params.icon }}" alt="{{ .project.Title }} Icon" class="icon"
+          loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
         {{ end }}
-        <h1 class="project-card-title">{{ .project.Title }}</h1>
+        <h1 class="title">{{ .project.Title }}</h1>
       </div>
-      <h5 class="project-card-description">{{ .project.Params.description }}</h5>
+      <h5 class="description">{{ .project.Params.description }}</h5>
     </div>
     {{ if or .project.Params.github .project.Params.live_demo }}
-    <div
-      class="project-card-buttons {{ if $isEven }}project-card-buttons-even{{ else }}project-card-buttons-odd{{ end }}">
+    <div class="buttons md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}">
       {{ if .project.Params.github }}
-      <a href="{{ .project.Params.github }}" target="_blank" class="btn btn-primary project-card-btn">
+      <a href="{{ .project.Params.github }}" target="_blank" class="btn btn-primary">
         <i class="ti ti-brand-github"></i>
         View on GitHub
       </a>
       {{ end }}
       {{ if .project.Params.live_demo }}
-      <a href="{{ .project.Params.live_demo }}" target="_blank" class="btn btn-primary project-card-btn">
+      <a href="{{ .project.Params.live_demo }}" target="_blank" class="btn btn-primary">
         <i class="ti ti-external-link"></i>
         View Live Demo
       </a>
       {{ end }}
     </div>
     {{ end }}
-    <div class="project-card-prose {{ if not $isEven }}project-card-prose-odd{{ else }}project-card-prose-even{{ end }}"
+    <div class="prose prose-sm max-w-none text-left md:{{ if not $isEven }}text-right{{ else }}text-left{{ end }}"
       style="color: var(--text-primary)">
       {{ .project.Content }}
     </div>
 
     {{ if .project.Params.technologies }}
-    <div class="project-card-tech">
-      <div
-        class="project-card-tech-icons {{ if $isEven }}project-card-tech-even{{ else }}project-card-tech-odd{{ end }}">
+    <div class="tech">
+      <div class="tech-icons md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}">
         {{ range .project.Params.technologies }}
-        <div class="tech-icon project-card-tech-icon" title="{{ . }}">
+        <div class="tech-icon" title="{{ . }}">
           {{ if eq . "nuxt" }}
           <i class="ti ti-brand-nuxt"></i>
           {{ else if eq . "vue" }}
