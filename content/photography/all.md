@@ -1,7 +1,6 @@
 ---
 title: "All photos"
 imagekit_folder: "photography"
-cover_image: "IMG_20151007_150145_result.jpg"
+cover_image: "DSC00510.jpg"
 layout: "single"
 ---
-

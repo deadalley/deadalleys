@@ -9,21 +9,21 @@
 {{ $sectionName := .Section }}
 {{ $pages := where .Site.RegularPages "Section" $sectionName }}
 
-{{/* Find the "all" page for featured album */}}
-{{ $allPages := where $pages ".File.BaseFileName" "all" }}
-{{ $allPage := index $allPages 0 }}
-{{ if $allPage }}
+{{/* Find the featured page for featured album */}}
+{{ $featuredPages := where $pages ".File.BaseFileName" .Params.featured }}
+{{ $featuredPage := index $featuredPages 0 }}
+{{ if $featuredPage }}
 <!-- Featured Album Section -->
 <div class="mb-16">
-  {{ $featuredAlbum := dict "id" "all" "title" $allPage.Title "imagekit_folder" $allPage.Params.imagekit_folder
-  "cover_image" $allPage.Params.cover_image }}
+  {{ $featuredAlbum := dict "id" $featuredPage.File.BaseFileName "title" $featuredPage.Title "imagekit_folder" $featuredPage.Params.imagekit_folder
+  "cover_image" $featuredPage.Params.cover_image }}
   {{ partial "featured-album.html" $featuredAlbum }}
 </div>
 {{ end }}
 
-{{/* Get all other pages (excluding _index and all) for albums */}}
+{{/* Get all other pages (excluding _index and featured) for albums */}}
 {{ $albumPages := where $pages ".File.BaseFileName" "!=" "_index" }}
-{{ $albumPages = where $albumPages ".File.BaseFileName" "!=" "all" }}
+{{ $albumPages = where $albumPages ".File.BaseFileName" "!=" .Params.featured }}
 
 {{ if $albumPages }}
 <!-- Albums Grid Section -->
