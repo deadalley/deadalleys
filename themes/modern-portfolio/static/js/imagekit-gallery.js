@@ -109,9 +109,26 @@ class ImageKitGallery extends BaseGallery {
     const carousel = document.getElementById("image-carousel");
     const carouselImage = document.getElementById("carousel-image");
     const carouselCounter = document.getElementById("carousel-counter");
+    const loadingSpinner = document.getElementById("carousel-loading");
 
     if (carousel && carouselImage && carouselCounter) {
       const currentFile = this.allImages[this.currentImageIndex];
+      
+      // Show loading spinner
+      if (loadingSpinner) {
+        loadingSpinner.classList.add('active');
+      }
+      
+      // Hide image while loading
+      carouselImage.style.opacity = '0';
+      
+      carouselImage.onload = () => {
+        if (loadingSpinner) {
+          loadingSpinner.classList.remove('active');
+        }
+        carouselImage.style.opacity = '1';
+      };
+      
       carouselImage.src = this.applyTransform(
         currentFile.url,
         this.fullTransform
@@ -156,6 +173,7 @@ class ImageKitGallery extends BaseGallery {
   updateCarouselImage() {
     const carouselImage = document.getElementById("carousel-image");
     const carouselCounter = document.getElementById("carousel-counter");
+    const loadingSpinner = document.getElementById("carousel-loading");
 
     if (
       carouselImage &&
@@ -163,6 +181,22 @@ class ImageKitGallery extends BaseGallery {
       this.allImages[this.currentImageIndex]
     ) {
       const currentFile = this.allImages[this.currentImageIndex];
+      
+      // Show loading spinner
+      if (loadingSpinner) {
+        loadingSpinner.classList.add('active');
+      }
+      
+      // Hide image while loading
+      carouselImage.style.opacity = '0';
+      
+      carouselImage.onload = () => {
+        if (loadingSpinner) {
+          loadingSpinner.classList.remove('active');
+        }
+        carouselImage.style.opacity = '1';
+      };
+      
       carouselImage.src = this.applyTransform(
         currentFile.url,
         this.fullTransform

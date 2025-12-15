@@ -1390,7 +1390,6 @@ li,
   max-width: 100%;
   max-height: 80vh;
   object-fit: contain;
-  border-radius: 8px;
 }
 
 .carousel-close {
@@ -1478,5 +1477,41 @@ li,
 @media (max-width: 480px) {
   .carousel-content img {
     max-height: 70vh;
+  }
+}
+
+/* Carousel Loading Spinner */
+.carousel-loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: none;
+}
+
+.carousel-loading-spinner.active {
+  display: block;
+}
+
+.spinner-ring {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: spinner-spin 0.8s linear infinite;
+}
+
+.carousel-content img {
+  transition: opacity 0.3s ease;
+}
+
+@keyframes spinner-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

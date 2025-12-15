@@ -89,7 +89,23 @@ class GridGallery extends BaseGallery {
   updateCarouselImage() {
     const carouselImage = document.getElementById("carousel-image");
     const counter = document.getElementById("carousel-counter");
+    const loadingSpinner = document.getElementById("carousel-loading");
     const currentImage = this.allImages[this.currentIndex];
+
+    // Show loading spinner
+    if (loadingSpinner) {
+      loadingSpinner.classList.add('active');
+    }
+    
+    // Hide image while loading
+    carouselImage.style.opacity = '0';
+    
+    carouselImage.onload = () => {
+      if (loadingSpinner) {
+        loadingSpinner.classList.remove('active');
+      }
+      carouselImage.style.opacity = '1';
+    };
 
     carouselImage.src = this.applyTransform(
       currentImage.url,
