@@ -29,13 +29,15 @@ class ImageKitGallery extends BaseGallery {
   }
 
   createGalleryItems(imageFiles) {
+    const startIndex = this.imageFiles.length - imageFiles.length;
     imageFiles.forEach((file, index) => {
-      const galleryItem = this.createGalleryItem(file, index);
+      const absoluteIndex = startIndex + index;
+      const galleryItem = this.createGalleryItem(file, absoluteIndex, index);
       this.galleryGrid.appendChild(galleryItem);
     });
   }
 
-  createGalleryItem(file, index) {
+  createGalleryItem(file, absoluteIndex, batchIndex) {
     const galleryItem = document.createElement("div");
 
     // Add slide-in animation classes
@@ -47,14 +49,14 @@ class ImageKitGallery extends BaseGallery {
       "slide-in-delay-5",
       "slide-in-delay-6",
     ];
-    const delayClass = delayClasses[index % delayClasses.length];
+    const delayClass = delayClasses[batchIndex % delayClasses.length];
 
     galleryItem.className = `gallery-item slide-in-bottom ${delayClass}`;
     galleryItem.style.cursor = "pointer";
 
     // Add click handler for carousel
     galleryItem.addEventListener("click", () => {
-      this.openCarousel(index);
+      this.openCarousel(absoluteIndex);
     });
 
     const img = document.createElement("img");
