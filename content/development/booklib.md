@@ -2,7 +2,7 @@
 id: "booklib-app"
 title: "BookLib"
 description: "Personal book collection management application."
-image: "books.jpeg"
+image: "booklib.png"
 icon: "booklib.svg"
 github: "https://github.com/deadalley/booklib-app"
 live_demo: "https://booklib-app.netlify.app/"

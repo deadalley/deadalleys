@@ -113,22 +113,22 @@ class ImageKitGallery extends BaseGallery {
 
     if (carousel && carouselImage && carouselCounter) {
       const currentFile = this.allImages[this.currentImageIndex];
-      
+
       // Show loading spinner
       if (loadingSpinner) {
-        loadingSpinner.classList.add('active');
+        loadingSpinner.classList.add("active");
       }
-      
+
       // Hide image while loading
-      carouselImage.style.opacity = '0';
-      
+      carouselImage.style.opacity = "0";
+
       carouselImage.onload = () => {
         if (loadingSpinner) {
-          loadingSpinner.classList.remove('active');
+          loadingSpinner.classList.remove("active");
         }
-        carouselImage.style.opacity = '1';
+        carouselImage.style.opacity = "1";
       };
-      
+
       carouselImage.src = this.applyTransform(
         currentFile.url,
         this.fullTransform
@@ -181,22 +181,22 @@ class ImageKitGallery extends BaseGallery {
       this.allImages[this.currentImageIndex]
     ) {
       const currentFile = this.allImages[this.currentImageIndex];
-      
+
       // Show loading spinner
       if (loadingSpinner) {
-        loadingSpinner.classList.add('active');
+        loadingSpinner.classList.add("active");
       }
-      
+
       // Hide image while loading
-      carouselImage.style.opacity = '0';
-      
+      carouselImage.style.opacity = "0";
+
       carouselImage.onload = () => {
         if (loadingSpinner) {
-          loadingSpinner.classList.remove('active');
+          loadingSpinner.classList.remove("active");
         }
-        carouselImage.style.opacity = '1';
+        carouselImage.style.opacity = "1";
       };
-      
+
       carouselImage.src = this.applyTransform(
         currentFile.url,
         this.fullTransform
