@@ -63,6 +63,13 @@ class BaseGallery {
         return;
       }
 
+      // Sort images by creation date, newest first
+      imageFiles.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA; // Descending order (newest first)
+      });
+
       this.images = imageFiles;
       this.hideLoadingMessage();
       this.renderGallery(imageFiles);
