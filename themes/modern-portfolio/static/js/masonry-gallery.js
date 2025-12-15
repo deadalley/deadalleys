@@ -53,7 +53,7 @@ class GridGallery extends BaseGallery {
     item.style.transition = "opacity 0.3s ease, transform 0.3s ease";
 
     const img = document.createElement("img");
-    img.src = file.url + this.thumbnailTransform;
+    img.src = this.applyTransform(file.url, this.thumbnailTransform);
     img.alt = this.generateAltText(file.name);
     img.loading = "lazy";
 
@@ -91,7 +91,10 @@ class GridGallery extends BaseGallery {
     const counter = document.getElementById("carousel-counter");
     const currentImage = this.allImages[this.currentIndex];
 
-    carouselImage.src = currentImage.url + this.fullTransform;
+    carouselImage.src = this.applyTransform(
+      currentImage.url,
+      this.fullTransform
+    );
     carouselImage.alt = this.generateAltText(currentImage.name);
     counter.textContent = `${this.currentIndex + 1} / ${this.allImages.length}`;
   }

@@ -99,6 +99,18 @@ class BaseGallery {
       .trim();
   }
 
+  applyTransform(url, transform) {
+    // If URL already has query parameters, use & instead of ?
+    if (url.includes("?")) {
+      // Remove the leading ? from transform and prepend &
+      const params = transform.startsWith("?")
+        ? transform.substring(1)
+        : transform;
+      return url + "&" + params;
+    }
+    return url + transform;
+  }
+
   hideLoadingMessage() {
     if (this.loadingMessage) {
       this.loadingMessage.style.display = "none";

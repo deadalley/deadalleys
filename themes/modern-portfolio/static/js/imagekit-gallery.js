@@ -58,7 +58,7 @@ class ImageKitGallery extends BaseGallery {
     });
 
     const img = document.createElement("img");
-    img.src = file.url + this.thumbnailTransform;
+    img.src = this.applyTransform(file.url, this.thumbnailTransform);
     img.alt = this.generateAltText(file.name);
     img.loading = "lazy";
 
@@ -112,7 +112,10 @@ class ImageKitGallery extends BaseGallery {
 
     if (carousel && carouselImage && carouselCounter) {
       const currentFile = this.allImages[this.currentImageIndex];
-      carouselImage.src = currentFile.url + this.fullTransform;
+      carouselImage.src = this.applyTransform(
+        currentFile.url,
+        this.fullTransform
+      );
       carouselImage.alt = this.generateAltText(currentFile.name);
 
       carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
@@ -160,7 +163,10 @@ class ImageKitGallery extends BaseGallery {
       this.allImages[this.currentImageIndex]
     ) {
       const currentFile = this.allImages[this.currentImageIndex];
-      carouselImage.src = currentFile.url + this.fullTransform;
+      carouselImage.src = this.applyTransform(
+        currentFile.url,
+        this.fullTransform
+      );
       carouselImage.alt = this.generateAltText(currentFile.name);
       carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
         this.allImages.length

@@ -9,6 +9,6 @@
 window.imagekitConfig = {
   baseURL: "https://ik.imagekit.io/deadalley31",
   apiKey: window.IMAGEKIT_API_KEY || "",
-  thumbnailTransform: "?tr=w-400,q-80",
-  fullTransform: "?tr=w-1200,q-90",
+  thumbnailTransform: "?tr=w-400,h-400,c-at_max,q-80,f-auto",
+  fullTransform: "?tr=w-1920,q-85,f-auto",
 };
