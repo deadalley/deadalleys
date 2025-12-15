@@ -910,6 +910,18 @@ html {
   transform: translateY(-2px);
 }
 
+.btn-tertiary {
+  background: var(--navy-dark);
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-tertiary:hover {
+  color: var(--accent-primary);
+  border-bottom: 1px solid var(--accent-primary);
+}
+
 /* Card styles */
 .card {
   display: flex;

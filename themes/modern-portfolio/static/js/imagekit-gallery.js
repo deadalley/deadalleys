@@ -12,9 +12,15 @@ class ImageKitGallery extends BaseGallery {
     this.initializeCarousel();
   }
 
-  renderGallery(imageFiles) {
+  renderGallery(imageFiles, clearFirst = true) {
     if (!this.galleryGrid) return;
-    this.imageFiles = imageFiles;
+
+    if (clearFirst) {
+      this.galleryGrid.innerHTML = "";
+      this.imageFiles = [];
+    }
+
+    this.imageFiles = this.imageFiles.concat(imageFiles);
     this.createGalleryItems(imageFiles);
   }
 
@@ -105,12 +111,12 @@ class ImageKitGallery extends BaseGallery {
     const carouselCounter = document.getElementById("carousel-counter");
 
     if (carousel && carouselImage && carouselCounter) {
-      const currentFile = this.imageFiles[this.currentImageIndex];
+      const currentFile = this.allImages[this.currentImageIndex];
       carouselImage.src = currentFile.url + this.fullTransform;
       carouselImage.alt = this.generateAltText(currentFile.name);
 
       carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
-        this.imageFiles.length
+        this.allImages.length
       }`;
 
       carousel.style.display = "flex";
@@ -127,19 +133,19 @@ class ImageKitGallery extends BaseGallery {
   }
 
   nextImage() {
-    if (!this.imageFiles || this.imageFiles.length === 0) return;
+    if (!this.allImages || this.allImages.length === 0) return;
 
     this.currentImageIndex =
-      (this.currentImageIndex + 1) % this.imageFiles.length;
+      (this.currentImageIndex + 1) % this.allImages.length;
     this.updateCarouselImage();
   }
 
   prevImage() {
-    if (!this.imageFiles || this.imageFiles.length === 0) return;
+    if (!this.allImages || this.allImages.length === 0) return;
 
     this.currentImageIndex =
       this.currentImageIndex === 0
-        ? this.imageFiles.length - 1
+        ? this.allImages.length - 1
         : this.currentImageIndex - 1;
     this.updateCarouselImage();
   }
@@ -151,13 +157,13 @@ class ImageKitGallery extends BaseGallery {
     if (
       carouselImage &&
       carouselCounter &&
-      this.imageFiles[this.currentImageIndex]
+      this.allImages[this.currentImageIndex]
     ) {
-      const currentFile = this.imageFiles[this.currentImageIndex];
+      const currentFile = this.allImages[this.currentImageIndex];
       carouselImage.src = currentFile.url + this.fullTransform;
       carouselImage.alt = this.generateAltText(currentFile.name);
       carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
-        this.imageFiles.length
+        this.allImages.length
       }`;
     }
   }

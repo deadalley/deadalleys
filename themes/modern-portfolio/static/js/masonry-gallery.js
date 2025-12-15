@@ -10,9 +10,14 @@ class GridGallery extends BaseGallery {
     this.currentIndex = 0;
   }
 
-  renderGallery(imageFiles) {
+  renderGallery(imageFiles, clearFirst = true) {
     if (!this.container) return;
-    this.createGridLayout(imageFiles);
+
+    if (clearFirst) {
+      this.container.innerHTML = "";
+    }
+
+    this.createGridLayout(imageFiles, !clearFirst);
   }
 
   hideLoadingMessage() {
@@ -22,14 +27,22 @@ class GridGallery extends BaseGallery {
     }
   }
 
-  createGridLayout(imageFiles) {
-    this.container.innerHTML = "";
-    this.container.className = "grid-gallery";
+  createGridLayout(imageFiles, append = false) {
+    if (!append) {
+      this.container.className = "grid-gallery";
+    }
 
+    const startIndex = append ? this.images.length : 0;
     imageFiles.forEach((file, index) => {
-      const item = this.createGridItem(file, index);
+      const item = this.createGridItem(file, startIndex + index);
       this.container.appendChild(item);
     });
+
+    if (append) {
+      this.images = this.images.concat(imageFiles);
+    } else {
+      this.images = imageFiles;
+    }
   }
 
   createGridItem(file, index) {
@@ -76,11 +89,11 @@ class GridGallery extends BaseGallery {
   updateCarouselImage() {
     const carouselImage = document.getElementById("carousel-image");
     const counter = document.getElementById("carousel-counter");
-    const currentImage = this.images[this.currentIndex];
+    const currentImage = this.allImages[this.currentIndex];
 
     carouselImage.src = currentImage.url + this.fullTransform;
     carouselImage.alt = this.generateAltText(currentImage.name);
-    counter.textContent = `${this.currentIndex + 1} / ${this.images.length}`;
+    counter.textContent = `${this.currentIndex + 1} / ${this.allImages.length}`;
   }
 
   addKeyboardNavigation() {
@@ -110,12 +123,12 @@ class GridGallery extends BaseGallery {
 
   prevImage() {
     this.currentIndex =
-      (this.currentIndex - 1 + this.images.length) % this.images.length;
+      (this.currentIndex - 1 + this.allImages.length) % this.allImages.length;
     this.updateCarouselImage();
   }
 
   nextImage() {
-    this.currentIndex = (this.currentIndex + 1) % this.images.length;
+    this.currentIndex = (this.currentIndex + 1) % this.allImages.length;
     this.updateCarouselImage();
   }
 

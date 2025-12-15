@@ -13,6 +13,9 @@ class BaseGallery {
     this.apiKey = config.apiKey;
     this.loadingMessage = document.getElementById("loading-message");
     this.images = [];
+    this.displayedCount = 0;
+    this.imagesPerLoad = 25;
+    this.allImages = [];
   }
 
   async loadImages() {
@@ -70,9 +73,10 @@ class BaseGallery {
         return dateB - dateA; // Descending order (newest first)
       });
 
+      this.allImages = imageFiles;
       this.images = imageFiles;
       this.hideLoadingMessage();
-      this.renderGallery(imageFiles);
+      this.loadMore();
     } catch (error) {
       console.error("Error loading gallery images:", error);
       this.showErrorMessage(error.message);
@@ -114,8 +118,32 @@ class BaseGallery {
     }
   }
 
+  loadMore() {
+    const endIndex = this.displayedCount + this.imagesPerLoad;
+    const newImages = this.allImages.slice(this.displayedCount, endIndex);
+
+    if (newImages.length > 0) {
+      this.renderGallery(newImages, false); // false = append, don't clear
+      this.displayedCount = endIndex;
+    }
+
+    this.updateLoadMoreButton();
+  }
+
+  updateLoadMoreButton() {
+    const loadMoreBtn = document.getElementById("load-more-btn");
+    if (!loadMoreBtn) return;
+
+    if (this.displayedCount >= this.allImages.length) {
+      loadMoreBtn.style.display = "none";
+    } else {
+      loadMoreBtn.style.display = "inline-block";
+      loadMoreBtn.onclick = () => this.loadMore();
+    }
+  }
+
   // Abstract method - must be implemented by subclasses
-  renderGallery(imageFiles) {
+  renderGallery(imageFiles, clearFirst = true) {
     throw new Error("renderGallery method must be implemented by subclass");
   }
 }
