@@ -19,7 +19,6 @@ class BaseGallery {
   }
 
   async loadImages() {
-    console.log("brother");
     try {
       let apiUrl;
 
@@ -29,19 +28,19 @@ class BaseGallery {
           const tagsQuery = this.tags.map((tag) => `"${tag}"`).join(", ");
           const searchQuery = `path:"/${this.folder}/" AND tags IN [${tagsQuery}]`;
           apiUrl = `https://api.imagekit.io/v1/files?searchQuery=${encodeURIComponent(
-            searchQuery
+            searchQuery,
           )}&fileType=image`;
         } else {
           // Fallback to folder only
           apiUrl = `https://api.imagekit.io/v1/files?path=${encodeURIComponent(
-            this.folder
+            this.folder,
           )}&includeFolder=false&fileType=image`;
         }
       } else if (this.tags && this.tags.length > 0) {
         // Fallback to tags only
         const tagsQuery = this.tags.join(",");
         apiUrl = `https://api.imagekit.io/v1/files?tags=${encodeURIComponent(
-          tagsQuery
+          tagsQuery,
         )}&includeFolder=false&fileType=image`;
       } else {
         return;
@@ -88,7 +87,7 @@ class BaseGallery {
     return files.filter(
       (file) =>
         file.fileType === "image" &&
-        imageExtensions.some((ext) => file.name.toLowerCase().endsWith(ext))
+        imageExtensions.some((ext) => file.name.toLowerCase().endsWith(ext)),
     );
   }
 
@@ -172,6 +171,7 @@ class GalleryConfig {
     return {
       folder: localConfig.folder || "",
       tags: localConfig.tags || [],
+      filterTags: localConfig.filterTags || [],
       baseURL: globalConfig.baseURL || localConfig.baseURL || "",
       thumbnailTransform:
         globalConfig.thumbnailTransform || localConfig.thumbnailTransform || "",
@@ -184,7 +184,7 @@ class GalleryConfig {
   static validate(config) {
     if (!config.apiKey) {
       console.warn(
-        "ImageKit API key not configured. Images will not load. Please check PHOTOGRAPHY_SETUP.md for configuration instructions."
+        "ImageKit API key not configured. Images will not load. Please check PHOTOGRAPHY_SETUP.md for configuration instructions.",
       );
       const loadingMessage = document.getElementById("loading-message");
       if (loadingMessage) {

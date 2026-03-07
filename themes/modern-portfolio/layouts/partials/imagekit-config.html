@@ -3,6 +3,7 @@
 {{ $fullTransform := "?tr=w-1920,q-85,f-auto" }}
 {{ $folder := .folder | default "" }}
 {{ $tags := .tags | default slice }}
+{{ $filterTags := .filterTags | default slice }}
 
 <script>
   // Inject environment variable into browser
@@ -14,6 +15,7 @@
   window.galleryConfig = {
     folder: '{{ $folder }}',
     tags: {{ $tags | jsonify | safeJS }},
+    filterTags: {{ $filterTags | jsonify | safeJS }},
     baseURL: '{{ $baseURL }}',
     thumbnailTransform: '{{ $thumbnailTransform }}',
     fullTransform: '{{ $fullTransform }}',

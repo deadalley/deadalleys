@@ -9,6 +9,9 @@ class ImageKitGallery extends BaseGallery {
     this.galleryGrid = document.querySelector(".gallery-grid");
     this.currentImageIndex = 0;
     this.imageFiles = [];
+    this.filteredImages = [];
+    this.filterTags = config.filterTags || [];
+    this.selectedTag = null;
     this.initializeCarousel();
   }
 
@@ -24,20 +27,118 @@ class ImageKitGallery extends BaseGallery {
     this.createGalleryItems(imageFiles);
   }
 
-  hideLoadingMessage() {
-    super.hideLoadingMessage();
+  renderFilterChips() {
+    const chipsContainer = document.getElementById("filter-chips-container");
+    if (!chipsContainer) return;
+
+    chipsContainer.innerHTML = "";
+
+    // Always create "All" chip
+    const allChip = document.createElement("button");
+    allChip.className = "filter-chip active";
+    allChip.textContent = "All";
+    allChip.dataset.tag = "all";
+    allChip.addEventListener("click", () => {
+      this.selectedTag = null;
+      this.filteredImages = [...this.allImages];
+      this.displayedCount = 0;
+      this.imageFiles = [];
+      this.galleryGrid.innerHTML = "";
+      this.currentImageIndex = 0;
+      this.updateChipStates();
+      this.loadMore();
+    });
+    chipsContainer.appendChild(allChip);
+
+    // Render filter tags if specified
+    if (this.filterTags && this.filterTags.length > 0) {
+      this.filterTags.forEach((tag) => {
+        const chip = document.createElement("button");
+        chip.className = "filter-chip";
+        chip.textContent = tag;
+        chip.dataset.tag = tag;
+
+        chip.addEventListener("click", () => {
+          this.filterByTag(tag);
+        });
+
+        chipsContainer.appendChild(chip);
+      });
+    }
+  }
+
+  updateChipStates() {
+    document.querySelectorAll(".filter-chip").forEach((chip) => {
+      const tagValue = chip.dataset.tag;
+      if (tagValue === "all") {
+        chip.classList.toggle("active", this.selectedTag === null);
+      } else {
+        chip.classList.toggle("active", this.selectedTag === tagValue);
+      }
+    });
+  }
+
+  filterByTag(tag) {
+    // Toggle selection
+    if (this.selectedTag === tag) {
+      this.selectedTag = null;
+      this.filteredImages = [...this.allImages];
+    } else {
+      this.selectedTag = tag;
+      this.filteredImages = this.allImages.filter(
+        (image) => image.tags && image.tags.includes(tag),
+      );
+    }
+
+    // Reload gallery with filtered images
+    this.displayedCount = 0;
+    this.imageFiles = [];
+    this.galleryGrid.innerHTML = "";
+    this.currentImageIndex = 0;
+    this.updateChipStates();
+    this.loadMore();
+  }
+
+  async loadImages() {
+    await super.loadImages();
+    this.renderFilterChips();
+  }
+
+  loadMore() {
+    console.log("loadmore");
+    const endIndex = this.displayedCount + this.imagesPerLoad;
+    const newImages = this.filteredImages.slice(this.displayedCount, endIndex);
+
+    if (newImages.length > 0) {
+      this.renderGallery(newImages, false); // false = append, don't clear
+      this.displayedCount = endIndex;
+    }
+
+    this.updateLoadMoreButton();
+  }
+
+  updateLoadMoreButton() {
+    const loadMoreBtn = document.getElementById("load-more-btn");
+    if (!loadMoreBtn) return;
+
+    // Use filteredImages for load-more button logic
+    if (this.displayedCount >= this.filteredImages.length) {
+      loadMoreBtn.style.display = "none";
+    } else {
+      loadMoreBtn.style.display = "inline-block";
+      loadMoreBtn.onclick = () => this.loadMore();
+    }
   }
 
   createGalleryItems(imageFiles) {
     const startIndex = this.imageFiles.length - imageFiles.length;
     imageFiles.forEach((file, index) => {
-      const absoluteIndex = startIndex + index;
-      const galleryItem = this.createGalleryItem(file, absoluteIndex, index);
+      const galleryItem = this.createGalleryItem(file, index);
       this.galleryGrid.appendChild(galleryItem);
     });
   }
 
-  createGalleryItem(file, absoluteIndex, batchIndex) {
+  createGalleryItem(file, batchIndex) {
     const galleryItem = document.createElement("div");
 
     // Add slide-in animation classes
@@ -54,9 +155,18 @@ class ImageKitGallery extends BaseGallery {
     galleryItem.className = `gallery-item slide-in-bottom ${delayClass}`;
     galleryItem.style.cursor = "pointer";
 
+    // Store file reference for carousel mapping
+    galleryItem.dataset.fileId = file.fileId;
+
     // Add click handler for carousel
     galleryItem.addEventListener("click", () => {
-      this.openCarousel(absoluteIndex);
+      // Find the index of this file in filteredImages
+      const carouselIndex = this.filteredImages.findIndex(
+        (img) => img.fileId === file.fileId,
+      );
+      if (carouselIndex !== -1) {
+        this.openCarousel(carouselIndex);
+      }
     });
 
     const img = document.createElement("img");
@@ -79,33 +189,23 @@ class ImageKitGallery extends BaseGallery {
   }
 
   initializeCarousel() {
-    // Add global carousel functions to window object
     window.openCarousel = (index) => this.openCarousel(index);
     window.closeCarousel = () => this.closeCarousel();
     window.nextImage = () => this.nextImage();
     window.prevImage = () => this.prevImage();
 
-    // Add keyboard event listener
     document.addEventListener("keydown", (e) => {
       const carousel = document.getElementById("image-carousel");
       if (carousel && carousel.style.display === "flex") {
-        switch (e.key) {
-          case "Escape":
-            this.closeCarousel();
-            break;
-          case "ArrowLeft":
-            this.prevImage();
-            break;
-          case "ArrowRight":
-            this.nextImage();
-            break;
-        }
+        if (e.key === "Escape") this.closeCarousel();
+        if (e.key === "ArrowLeft") this.prevImage();
+        if (e.key === "ArrowRight") this.nextImage();
       }
     });
   }
 
   openCarousel(index) {
-    if (!this.imageFiles || this.imageFiles.length === 0) return;
+    if (!this.filteredImages || this.filteredImages.length === 0) return;
 
     this.currentImageIndex = index;
     const carousel = document.getElementById("image-carousel");
@@ -113,37 +213,29 @@ class ImageKitGallery extends BaseGallery {
     const carouselCounter = document.getElementById("carousel-counter");
     const loadingSpinner = document.getElementById("carousel-loading");
 
-    if (carousel && carouselImage && carouselCounter) {
-      const currentFile = this.allImages[this.currentImageIndex];
+    if (!carousel || !carouselImage || !carouselCounter) return;
 
-      // Show loading spinner
-      if (loadingSpinner) {
-        loadingSpinner.classList.add("active");
-      }
+    const currentFile = this.filteredImages[this.currentImageIndex];
 
-      // Hide image while loading
-      carouselImage.style.opacity = "0";
+    if (loadingSpinner) loadingSpinner.classList.add("active");
+    carouselImage.style.opacity = "0";
 
-      carouselImage.onload = () => {
-        if (loadingSpinner) {
-          loadingSpinner.classList.remove("active");
-        }
-        carouselImage.style.opacity = "1";
-      };
+    carouselImage.onload = () => {
+      if (loadingSpinner) loadingSpinner.classList.remove("active");
+      carouselImage.style.opacity = "1";
+    };
 
-      carouselImage.src = this.applyTransform(
-        currentFile.url,
-        this.fullTransform
-      );
-      carouselImage.alt = this.generateAltText(currentFile.name);
+    carouselImage.src = this.applyTransform(
+      currentFile.url,
+      this.fullTransform,
+    );
+    carouselImage.alt = this.generateAltText(currentFile.name);
+    carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
+      this.filteredImages.length
+    }`;
 
-      carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
-        this.allImages.length
-      }`;
-
-      carousel.style.display = "flex";
-      document.body.style.overflow = "hidden";
-    }
+    carousel.style.display = "flex";
+    document.body.style.overflow = "hidden";
   }
 
   closeCarousel() {
@@ -155,19 +247,19 @@ class ImageKitGallery extends BaseGallery {
   }
 
   nextImage() {
-    if (!this.allImages || this.allImages.length === 0) return;
+    if (!this.filteredImages || this.filteredImages.length === 0) return;
 
     this.currentImageIndex =
-      (this.currentImageIndex + 1) % this.allImages.length;
+      (this.currentImageIndex + 1) % this.filteredImages.length;
     this.updateCarouselImage();
   }
 
   prevImage() {
-    if (!this.allImages || this.allImages.length === 0) return;
+    if (!this.filteredImages || this.filteredImages.length === 0) return;
 
     this.currentImageIndex =
       this.currentImageIndex === 0
-        ? this.allImages.length - 1
+        ? this.filteredImages.length - 1
         : this.currentImageIndex - 1;
     this.updateCarouselImage();
   }
@@ -177,37 +269,27 @@ class ImageKitGallery extends BaseGallery {
     const carouselCounter = document.getElementById("carousel-counter");
     const loadingSpinner = document.getElementById("carousel-loading");
 
-    if (
-      carouselImage &&
-      carouselCounter &&
-      this.allImages[this.currentImageIndex]
-    ) {
-      const currentFile = this.allImages[this.currentImageIndex];
+    if (!carouselImage || !carouselCounter) return;
 
-      // Show loading spinner
-      if (loadingSpinner) {
-        loadingSpinner.classList.add("active");
-      }
+    const currentFile = this.filteredImages[this.currentImageIndex];
+    if (!currentFile) return;
 
-      // Hide image while loading
-      carouselImage.style.opacity = "0";
+    if (loadingSpinner) loadingSpinner.classList.add("active");
+    carouselImage.style.opacity = "0";
 
-      carouselImage.onload = () => {
-        if (loadingSpinner) {
-          loadingSpinner.classList.remove("active");
-        }
-        carouselImage.style.opacity = "1";
-      };
+    carouselImage.onload = () => {
+      if (loadingSpinner) loadingSpinner.classList.remove("active");
+      carouselImage.style.opacity = "1";
+    };
 
-      carouselImage.src = this.applyTransform(
-        currentFile.url,
-        this.fullTransform
-      );
-      carouselImage.alt = this.generateAltText(currentFile.name);
-      carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
-        this.allImages.length
-      }`;
-    }
+    carouselImage.src = this.applyTransform(
+      currentFile.url,
+      this.fullTransform,
+    );
+    carouselImage.alt = this.generateAltText(currentFile.name);
+    carouselCounter.textContent = `${this.currentImageIndex + 1} / ${
+      this.filteredImages.length
+    }`;
   }
 
   showNoImagesMessage() {

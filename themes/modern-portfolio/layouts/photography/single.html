@@ -14,6 +14,10 @@
     </div>
     {{ end }}
 
+    <!-- Filter Chips -->
+    <div id="filter-chips-container" class="mb-8 flex flex-wrap gap-2 justify-center">
+    </div>
+
     <div class="gallery-grid">
     </div>
 
@@ -48,7 +52,8 @@
 </div>
 
 {{ if or $folder $tags }}
-{{ partial "imagekit-config.html" (dict "folder" $folder "tags" $tags) }}
+{{ $filterTags := .Params.filter_tags | default slice }}
+{{ partial "imagekit-config.html" (dict "folder" $folder "tags" $tags "filterTags" $filterTags) }}
 <script src="{{ "js/imagekit-gallery.js" | relURL }}"></script>
 <script src="{{ "js/slide-animations.js" | relURL }}"></script>
 {{ end }}
