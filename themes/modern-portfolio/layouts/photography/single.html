@@ -54,7 +54,7 @@
 {{ if or $folder $tags }}
 {{ $filterTags := .Params.filter_tags | default slice }}
 {{ partial "imagekit-config.html" (dict "folder" $folder "tags" $tags "filterTags" $filterTags) }}
-<script src="{{ "js/imagekit-gallery.js" | relURL }}"></script>
+<script src="{{ "js/gallery.js" | relURL }}"></script>
 <script src="{{ "js/slide-animations.js" | relURL }}"></script>
 {{ end }}
 

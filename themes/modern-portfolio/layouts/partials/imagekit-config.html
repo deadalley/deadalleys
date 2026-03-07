@@ -1,9 +1,7 @@
-{{ $baseURL := "https://ik.imagekit.io/deadalley31" }}
-{{ $thumbnailTransform := "?tr=w-400,h-400,c-at_max,q-80,f-auto" }}
-{{ $fullTransform := "?tr=w-1920,q-85,f-auto" }}
-{{ $folder := .folder | default "" }}
-{{ $tags := .tags | default slice }}
-{{ $filterTags := .filterTags | default slice }}
+{{ $baseURL := "https://ik.imagekit.io/deadalley31" }} {{ $thumbnailTransform :=
+"?tr=w-400,h-400,c-at_max,q-80,f-auto" }} {{ $fullTransform :=
+"?tr=w-1920,q-85,f-auto" }} {{ $folder := .folder | default "" }} {{ $tags :=
+.tags | default slice }} {{ $filterTags := .filterTags | default slice }}
 
 <script>
   // Inject environment variable into browser
@@ -22,5 +20,3 @@
     apiKey: window.IMAGEKIT_API_KEY || ''
   };
 </script>
-
-<script src="{{ "js/base-gallery.js" | relURL }}"></script>
