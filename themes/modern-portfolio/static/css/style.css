@@ -375,7 +375,7 @@ html {
 .album-card {
   position: relative;
   overflow: hidden;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -523,7 +523,7 @@ html {
 .featured-album {
   position: relative;
   overflow: hidden;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
