@@ -2,6 +2,6 @@
 title: "Animals"
 imagekit_folder: "photography"
 imagekit_tags: ["animals"]
-cover_image: "DSC00228.jpg"
+cover_image: "DSC01890.jpg"
 layout: "single"
 ---
