@@ -25,11 +25,22 @@
 {{ $albumPages := where $pages ".File.BaseFileName" "!=" "_index" }}
 {{ $albumPages = where $albumPages ".File.BaseFileName" "!=" .Params.featured }}
 
-{{ if $albumPages }}
+{{/* Separate location pages by checking the location_page parameter */}}
+{{ $locationPages := slice }}
+{{ $mainAlbumPages := slice }}
+{{ range $albumPages }}
+  {{ if .Params.location_page }}
+    {{ $locationPages = $locationPages | append . }}
+  {{ else }}
+    {{ $mainAlbumPages = $mainAlbumPages | append . }}
+  {{ end }}
+{{ end }}
+
+{{ if $mainAlbumPages }}
 <!-- Albums Grid Section -->
 <div>
   <div class="albums-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {{ range $index, $page := $albumPages }}
+    {{ range $index, $page := $mainAlbumPages }}
     {{ $delayClass := "" }}
     {{ if eq $index 0 }}{{ $delayClass = "slide-in-delay-1" }}{{ end }}
     {{ if eq $index 1 }}{{ $delayClass = "slide-in-delay-2" }}{{ end }}
@@ -38,6 +49,29 @@
     {{ if eq $index 4 }}{{ $delayClass = "slide-in-delay-5" }}{{ end }}
     {{ if eq $index 5 }}{{ $delayClass = "slide-in-delay-6" }}{{ end }}
     <div class="slide-in-bottom {{ $delayClass }}">
+      {{ $album := dict "id" .File.BaseFileName "title" .Title "imagekit_folder" .Params.imagekit_folder
+      "imagekit_tags" .Params.imagekit_tags "cover_image" .Params.cover_image }}
+      {{ partial "album-card.html" $album }}
+    </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}
+
+{{ if $locationPages }}
+<!-- Location Pages Grid Section -->
+<div class="mt-20">
+  <h2 class="text-2xl font-bold text-white mb-8 text-center">Places</h2>
+  <div class="albums-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {{ range $index, $page := $locationPages }}
+    {{ $delayClass := "" }}
+    {{ if eq $index 0 }}{{ $delayClass = "slide-in-delay-1" }}{{ end }}
+    {{ if eq $index 1 }}{{ $delayClass = "slide-in-delay-2" }}{{ end }}
+    {{ if eq $index 2 }}{{ $delayClass = "slide-in-delay-3" }}{{ end }}
+    {{ if eq $index 3 }}{{ $delayClass = "slide-in-delay-4" }}{{ end }}
+    {{ if eq $index 4 }}{{ $delayClass = "slide-in-delay-5" }}{{ end }}
+    {{ if eq $index 5 }}{{ $delayClass = "slide-in-delay-6" }}{{ end }}
+     <div class="slide-in-bottom {{ $delayClass }}">
       {{ $album := dict "id" .File.BaseFileName "title" .Title "imagekit_folder" .Params.imagekit_folder
       "imagekit_tags" .Params.imagekit_tags "cover_image" .Params.cover_image }}
       {{ partial "album-card.html" $album }}
