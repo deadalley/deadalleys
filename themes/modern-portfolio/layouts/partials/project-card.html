@@ -2,44 +2,79 @@
 
 <div class="project-card {{ if not $isEven }}project-card-reverse{{ end }}">
   <div class="image">
-    <img src="{{ .Site.BaseURL }}{{ .project.Params.image }}" alt="{{ .project.Title }}" loading="lazy"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+    <img
+      src="{{ .Site.BaseURL }}{{ .project.Params.image }}"
+      alt="{{ .project.Title }}"
+      loading="lazy"
+      onerror="
+        this.style.display = 'none';
+        this.nextElementSibling.style.display = 'flex';
+      "
+    />
   </div>
-  <div class="content md:{{ if $isEven }}text-left{{ else }}text-right{{ end }}">
+  <div
+    class="content md:{{ if $isEven }}text-left{{ else }}text-right{{ end }}"
+  >
     <div class="header">
-      <div class="flex justify-start md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}">
-        {{ if .project.Params.icon }}
-        <img src="{{ .Site.BaseURL }}{{ .project.Params.icon }}" alt="{{ .project.Title }} Icon" class="icon"
-          loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div class="flex flex-col lg:flex-row justify-between gap-4">
+        <div
+          class="flex justify-start md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}"
+        >
+          {{ if .project.Params.icon }}
+          <img
+            src="{{ .Site.BaseURL }}{{ .project.Params.icon }}"
+            alt="{{ .project.Title }} Icon"
+            class="icon"
+            loading="lazy"
+            onerror="
+              this.style.display = 'none';
+              this.nextElementSibling.style.display = 'flex';
+            "
+          />
+          {{ end }}
+          <h1 class="title">{{ .project.Title }}</h1>
+        </div>
+        {{ if or .project.Params.github .project.Params.live_demo }}
+        <div
+          class="buttons md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}"
+        >
+          {{ if .project.Params.github }}
+          <a
+            href="{{ .project.Params.github }}"
+            target="_blank"
+            class="btn btn-primary"
+          >
+            <i class="ti ti-brand-github"></i>
+            View on GitHub
+          </a>
+          {{ end }} {{ if .project.Params.live_demo }}
+          <a
+            href="{{ .project.Params.live_demo }}"
+            target="_blank"
+            class="btn btn-primary"
+          >
+            <i class="ti ti-external-link"></i>
+            View Live Demo
+          </a>
+          {{ end }}
+        </div>
         {{ end }}
-        <h1 class="title">{{ .project.Title }}</h1>
       </div>
       <h5 class="description">{{ .project.Params.description }}</h5>
     </div>
-    {{ if or .project.Params.github .project.Params.live_demo }}
-    <div class="buttons md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}">
-      {{ if .project.Params.github }}
-      <a href="{{ .project.Params.github }}" target="_blank" class="btn btn-primary">
-        <i class="ti ti-brand-github"></i>
-        View on GitHub
-      </a>
-      {{ end }}
-      {{ if .project.Params.live_demo }}
-      <a href="{{ .project.Params.live_demo }}" target="_blank" class="btn btn-primary">
-        <i class="ti ti-external-link"></i>
-        View Live Demo
-      </a>
-      {{ end }}
-    </div>
-    {{ end }}
-    <div class="prose prose-sm max-w-none text-left md:{{ if not $isEven }}text-right{{ else }}text-left{{ end }}"
-      style="color: var(--text-primary)">
+
+    <div
+      class="project-prose prose prose-sm max-w-none text-left md:{{ if not $isEven }}text-right{{ else }}text-left{{ end }}"
+      style="color: var(--text-primary)"
+    >
       {{ .project.Content }}
     </div>
 
     {{ if .project.Params.technologies }}
     <div class="tech">
-      <div class="tech-icons md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}">
+      <div
+        class="tech-icons md:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}"
+      >
         {{ range .project.Params.technologies }}
         <div class="tech-icon" title="{{ . }}">
           {{ if eq . "nuxt" }}

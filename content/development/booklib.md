@@ -15,7 +15,7 @@ technologies:
   - electron
 ---
 
-### Features
+#### Features
 
 - Catalog books by title, author, publisher, year, pages, language, and original language
 - Organize them into custom collections
@@ -24,7 +24,7 @@ technologies:
 - Keep track of your reading goals
 - Import and export your library in JSON or CSV
 
-### Available for
+#### Available for
 
 - Desktop (Windows, Linux)
 - Mobile (COMING SOON)

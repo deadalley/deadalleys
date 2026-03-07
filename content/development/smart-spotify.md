@@ -13,13 +13,13 @@ technologies:
   - redis
 ---
 
-### Features
+#### Features
 
 - Easily visualize and navigate all artists, tracks, and playlists in your library
 - Analyze genre consistency of your playlists
 - Get playlist suggestions for tracks
 - Move tracks between playlists
 
-### Available for
+#### Available for
 
 - Web app

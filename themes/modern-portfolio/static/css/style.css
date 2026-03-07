@@ -118,6 +118,36 @@ html {
   margin: 0.5rem 0;
 }
 
+/* Project Content Prose - Enhanced Hierarchy */
+.project-prose h3,
+h2,
+h4 {
+  font-size: 1.75rem;
+  line-height: 1.3;
+  color: var(--accent-primary);
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--navy-medium);
+  padding-bottom: 0.75rem;
+}
+
+.project-prose h3:first-child,
+h2:first-child,
+h4:first-child {
+  margin-top: 0;
+}
+
+.project-prose ul {
+  margin: 1.5rem 0;
+  padding-left: 2rem;
+}
+
+.project-prose li {
+  margin: 0.75rem 0;
+  color: var(--text-secondary);
+}
+
 /* Gallery Styles */
 .gallery-grid {
   display: grid;
@@ -288,7 +318,7 @@ html {
   }
 
   .project-card .header {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
   .project-card .header .title {
