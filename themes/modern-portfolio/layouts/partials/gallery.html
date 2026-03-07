@@ -39,8 +39,9 @@
 {{ if $mainAlbumPages }}
 <!-- Albums Grid Section -->
 <div class="mt-20">
-  <h2 class="text-4xl font-bold text-white mb-3 text-center">Subjects</h2>
-  <hr class="mb-8" />
+  {{ if .Params.main_section_title }}
+  <h2 class="text-4xl font-bold text-white mb-8 text-center">{{ .Params.main_section_title }}</h2>
+  {{ end }}
   <div class="albums-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     {{ range $index, $page := $mainAlbumPages }}
     {{ $delayClass := "" }}
@@ -63,8 +64,9 @@
 {{ if $locationPages }}
 <!-- Location Pages Grid Section -->
 <div class="mt-20">
-  <h2 class="text-4xl font-bold text-white mb-3 text-center">Places</h2>
-  <hr class="mb-8" />
+{{ if .Params.location_section_title }}
+  <h2 class="text-4xl font-bold text-white mb-8 text-center">{{ .Params.location_section_title }}</h2>
+{{ end }}
   <div class="albums-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     {{ range $index, $page := $locationPages }}
     {{ $delayClass := "" }}
