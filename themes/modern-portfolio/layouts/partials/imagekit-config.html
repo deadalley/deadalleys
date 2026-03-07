@@ -1,7 +1,8 @@
 {{ $baseURL := "https://ik.imagekit.io/deadalley31" }} {{ $thumbnailTransform :=
 "?tr=w-400,h-400,c-at_max,q-80,f-auto" }} {{ $fullTransform :=
 "?tr=w-1920,q-85,f-auto" }} {{ $folder := .folder | default "" }} {{ $tags :=
-.tags | default slice }} {{ $filterTags := .filterTags | default slice }}
+.tags | default slice }} {{ $filterTags := .filterTags | default slice }} {{
+$enablePagination := .enablePagination | default true }}
 
 <script>
   // Inject environment variable into browser
@@ -14,6 +15,7 @@
     folder: '{{ $folder }}',
     tags: {{ $tags | jsonify | safeJS }},
     filterTags: {{ $filterTags | jsonify | safeJS }},
+    enablePagination: {{ $enablePagination | jsonify | safeJS }},
     baseURL: '{{ $baseURL }}',
     thumbnailTransform: '{{ $thumbnailTransform }}',
     fullTransform: '{{ $fullTransform }}',

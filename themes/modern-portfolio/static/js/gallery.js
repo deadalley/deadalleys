@@ -8,12 +8,14 @@ class Gallery {
     this.folder = config.folder;
     this.tags = config.tags;
     this.filterTags = config.filterTags || [];
+    this.enablePagination = config.enablePagination !== false;
     this.baseURL = config.baseURL;
     this.thumbnailTransform = config.thumbnailTransform;
     this.fullTransform = config.fullTransform;
     this.apiKey = config.apiKey;
 
     this.loadingMessage = document.getElementById("loading-message");
+    this.noResultsMessage = document.getElementById("no-results-message");
     this.galleryGrid = document.querySelector(".gallery-grid");
 
     this.allImages = [];
@@ -79,6 +81,7 @@ class Gallery {
       this.allImages = imageFiles;
       this.filteredImages = [...imageFiles];
       this.hideLoadingMessage();
+      this.hideNoImagesMessage();
       this.renderFilterChips();
       this.loadMore();
     } catch (error) {
@@ -143,6 +146,8 @@ class Gallery {
     this.imageFiles = [];
     this.galleryGrid.innerHTML = "";
     this.currentImageIndex = 0;
+    this.hideNoImagesMessage();
+    this.hideLoadingMessage();
     this.updateChipStates();
     this.loadMore();
   }
@@ -159,9 +164,16 @@ class Gallery {
   }
 
   loadMore() {
-    if (this.filteredImages.length === 0) return;
+    if (this.filteredImages.length === 0) {
+      this.showNoImagesMessage();
+      return;
+    }
 
-    const endIndex = this.displayedCount + this.imagesPerLoad;
+    this.hideNoImagesMessage();
+    const batchSize = this.enablePagination
+      ? this.imagesPerLoad
+      : this.filteredImages.length;
+    const endIndex = this.displayedCount + batchSize;
     const newImages = this.filteredImages.slice(this.displayedCount, endIndex);
 
     if (newImages.length > 0) {
@@ -219,7 +231,10 @@ class Gallery {
 
   updateLoadMoreButton() {
     const loadMoreBtn = document.getElementById("load-more-btn");
-    if (!loadMoreBtn) return;
+    if (!loadMoreBtn || !this.enablePagination) {
+      if (loadMoreBtn) loadMoreBtn.style.display = "none";
+      return;
+    }
 
     if (this.displayedCount >= this.filteredImages.length) {
       loadMoreBtn.style.display = "none";
@@ -355,9 +370,18 @@ class Gallery {
   }
 
   showNoImagesMessage() {
-    if (this.loadingMessage) {
-      this.loadingMessage.innerHTML =
-        '<p class="text-white">No images found.</p>';
+    if (this.noResultsMessage) {
+      const message = this.selectedTag
+        ? `No images found for "${this.selectedTag}".`
+        : "No images found.";
+      this.noResultsMessage.textContent = message;
+      this.noResultsMessage.style.display = "block";
+    }
+  }
+
+  hideNoImagesMessage() {
+    if (this.noResultsMessage) {
+      this.noResultsMessage.style.display = "none";
     }
   }
 
@@ -378,6 +402,7 @@ class GalleryConfig {
       folder: localConfig.folder || "",
       tags: localConfig.tags || [],
       filterTags: localConfig.filterTags || [],
+      enablePagination: localConfig.enablePagination !== false,
       baseURL: localConfig.baseURL || "",
       thumbnailTransform: localConfig.thumbnailTransform || "",
       fullTransform: localConfig.fullTransform || "",

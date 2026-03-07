@@ -18,6 +18,10 @@
     <div id="filter-chips-container" class="mb-8 flex flex-wrap gap-2 justify-center">
     </div>
 
+    <!-- No Results Message -->
+    <div id="no-results-message" class="text-center text-white mb-8" style="display: none;">
+    </div>
+
     <div class="gallery-grid">
     </div>
 
@@ -53,7 +57,8 @@
 
 {{ if or $folder $tags }}
 {{ $filterTags := .Params.filter_tags | default slice }}
-{{ partial "imagekit-config.html" (dict "folder" $folder "tags" $tags "filterTags" $filterTags) }}
+{{ $enablePagination := .Params.enable_pagination | default false }}
+{{ partial "imagekit-config.html" (dict "folder" $folder "tags" $tags "filterTags" $filterTags "enablePagination" $enablePagination) }}
 <script src="{{ "js/gallery.js" | relURL }}"></script>
 <script src="{{ "js/slide-animations.js" | relURL }}"></script>
 {{ end }}
