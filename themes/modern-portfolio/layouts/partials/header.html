@@ -2,16 +2,21 @@
   <nav class="container mx-auto px-6 py-4">
     <div class="flex justify-between items-center">
       <div class="flex items-center">
-        <a href="{{ .Site.BaseURL }}" class="text-2xl font-bold nav-link" style="color: var(--orange-primary)">
+        <a
+          href="{{ .Site.BaseURL }}"
+          class="text-2xl font-bold nav-link"
+          style="color: var(--orange-primary)"
+        >
           {{ .Site.Title }}
         </a>
       </div>
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex space-x-8">
-        <a href="{{ .Site.BaseURL }}" class="nav-link font-medium">Home</a>
-        {{ range .Site.Sections.ByParam "order" }}
-        <a href="{{ .Site.BaseURL }}{{ .Section }}/" class="nav-link font-medium">{{ .Title }}</a>
+        {{ range .Site.Menus.main }}
+        <a href="{{ .URL | relURL }}" class="nav-link font-medium"
+          >{{ .Name }}</a
+        >
         {{ end }}
       </div>
 
@@ -24,10 +29,12 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="glassmorphic-mobile-menu hidden md:hidden mt-4 pb-4">
-      <a href="{{ .Site.BaseURL }}" class="block py-2 nav-link">Home</a>
-      {{ range .Site.Sections.ByParam "order" }}
-      <a href="{{ .Site.BaseURL }}{{ .Section }}/" class="block py-2 nav-link">{{ .Title }}</a>
+    <div
+      id="mobile-menu"
+      class="glassmorphic-mobile-menu hidden md:hidden mt-4 pb-4"
+    >
+      {{ range .Site.Menus.main }}
+      <a href="{{ .URL | relURL }}" class="block py-2 nav-link">{{ .Name }}</a>
       {{ end }}
     </div>
   </nav>
