@@ -3,10 +3,16 @@
 <section class="hero-section-extended">
   <div class="hero-overlay"></div>
   <div class="container mx-auto px-6 text-center relative z-10">
-    <h1 class="text-5xl md:text-6xl font-bold mb-6" style="color: var(--text-primary)">
+    <h1
+      class="text-5xl md:text-6xl font-bold mb-6"
+      style="color: var(--text-primary)"
+    >
       {{ .Site.Title }}
     </h1>
-    <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto" style="color: var(--text-secondary)">
+    <p
+      class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto"
+      style="color: var(--text-secondary)"
+    >
       {{ .Site.Params.description }}
     </p>
   </div>
@@ -23,10 +29,11 @@
 <section class="py-20">
   <div class="container mx-auto px-32">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {{ range .Site.Sections.ByParam "order" }}
-      {{ $title := printf "%s." (.Title | lower) }}
-      {{ partial "feature-card.html" (dict "icon" .Params.icon "title" $title "url" .Section) }}
-      {{ end }}
+      {{ range .Site.Menus.main }} {{ if ne (lower .Name) "home" }} {{ $path :=
+      trim .URL "/" }} {{ $page := site.GetPage $path }} {{ $title := printf
+      "%s." (.Name | lower) }} {{ $icon := "" }} {{ if $page }} {{ $icon =
+      $page.Params.icon }} {{ end }} {{ partial "feature-card.html" (dict "icon"
+      $icon "title" $title "url" (.URL | relURL)) }} {{ end }} {{ end }}
     </div>
   </div>
 </section>
