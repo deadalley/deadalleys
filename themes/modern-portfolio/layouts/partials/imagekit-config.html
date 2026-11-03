@@ -37,7 +37,8 @@
       {{ $msg := printf "ImageKit: could not list images for %q: %s" $folder . }}
       {{ if $strict }}{{ errorf "%s" $msg }}{{ else }}{{ warnf "%s" $msg }}{{ end }}
     {{ else with .Value }}
-      {{ range (.Content | transform.Unmarshal) }}
+      {{/* The API returns a top-level JSON array, which Hugo can't sniff, so name the format */}}
+      {{ range (.Content | transform.Unmarshal (dict "format" "json")) }}
         {{ $images = $images | append (dict
           "fileId" .fileId
           "name" .name
