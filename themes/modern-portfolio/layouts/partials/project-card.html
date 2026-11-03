@@ -89,8 +89,16 @@
           <i class="ti ti-atom"></i>
           {{ else if eq . "react" }}
           <i class="ti ti-brand-react"></i>
-          {{ else if eq . "node" }}
+          {{ else if or (eq . "node") (eq . "nodejs") }}
           <i class="ti ti-brand-nodejs"></i>
+          {{ else if eq . "vite" }}
+          <i class="ti ti-brand-vite"></i>
+          {{ else if eq . "echarts" }}
+          <i class="ti ti-chart-bar"></i>
+          {{ else if eq . "express" }}
+          <i class="ti ti-server"></i>
+          {{ else if eq . "redis" }}
+          <i class="ti ti-database"></i>
           {{ else if eq . "python" }}
           <i class="ti ti-brand-python"></i>
           {{ else if eq . "javascript" }}

@@ -5,6 +5,7 @@ image: "planes.jpeg"
 icon: "piplane-tracker.svg"
 github: "https://github.com/deadalley/piplane-tracker"
 description: "Simple application for Raspberry Pi for tracking planes flying overhead your current position with ADS-B."
+weight: 4
 technologies:
   - raspberry pi
   - python

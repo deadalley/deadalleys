@@ -1,31 +1,36 @@
 ---
 id: "booklib-app"
 title: "BookLib"
-description: "Personal book collection management application."
-image: "booklib.png"
+description: "Manage your personal library and reach your reading goals."
+image: "booklib.webp"
 icon: "booklib.svg"
 github: "https://github.com/deadalley/booklib-app"
 live_demo: "https://booklib-app.netlify.app/"
+weight: 1
 technologies:
   - nuxt
   - vue
   - typescript
   - tailwind
-  - playwright
+  - echarts
   - electron
+  - playwright
 ---
 
 #### Features
 
-- Catalog books by title, author, publisher, year, pages, language, and original language
-- Organize them into custom collections
-- Track your book progress (owned, reading, read, or wishlisted)
-- Get an overview of the characteristics of your library with graphs and statistics
-- Keep track of your reading goals
-- Import and export your library in JSON or CSV
+- Home page with reading suggestions, the books you're currently reading, goal progress and your year so far
+- Catalog books by title, author, publisher, year, pages, format, genres, language and original language
+- Browse your library by books, authors and collections, with filters, bulk actions and global search
+- Track each book's progress (reading, paused, read or not finished) and whether you own it
+- Set reading goals by books, pages or hours, log your daily reading and see whether you're on pace
+- Explore your reading with statistics: books finished per month, pages read, ratings and distributions by year, language, genre and more
+- Import and export your library in CSV or JSON, or make a full backup of books, collections, authors and goals
+- Book covers stored with your library in the desktop app
+- Works on phone, tablet and desktop screens
 
 #### Available for
 
 - Desktop (Windows, Linux)
-- Mobile (COMING SOON)
+- Mobile (coming soon)
 - Web app (demo)

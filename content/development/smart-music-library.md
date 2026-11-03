@@ -1,10 +1,11 @@
 ---
-id: "smart-spotify"
-title: "Smart Spotify"
-description: "Smart playlist manager for your Spotify library."
-image: "smart-spotify.png"
-icon: "smart-spotify.svg"
-github: "https://github.com/deadalley/smart-spotify"
+id: "smart-music-library"
+title: "Smart Music Library"
+description: "Smart playlist manager for your Spotify and YouTube Music library."
+image: "smart-music-library.webp"
+icon: "smart-music-library.svg"
+github: "https://github.com/deadalley/smart-music-library"
+weight: 3
 technologies:
   - react
   - typescript
@@ -15,6 +16,7 @@ technologies:
 
 #### Features
 
+- Connect your Spotify or YouTube Music account
 - Easily visualize and navigate all artists, tracks, and playlists in your library
 - Analyze genre consistency of your playlists
 - Get playlist suggestions for tracks
