@@ -32,11 +32,11 @@
 {{ $apiKey := getenv "IMAGEKIT_API_KEY" }}
 {{ if and $apiURL $apiKey }}
   {{ $auth := printf "Basic %s" (base64Encode (printf "%s:" $apiKey)) }}
-  {{ with resources.GetRemote $apiURL (dict "headers" (dict "Authorization" $auth)) }}
+  {{ with try (resources.GetRemote $apiURL (dict "headers" (dict "Authorization" $auth))) }}
     {{ with .Err }}
       {{ $msg := printf "ImageKit: could not list images for %q: %s" $folder . }}
       {{ if $strict }}{{ errorf "%s" $msg }}{{ else }}{{ warnf "%s" $msg }}{{ end }}
-    {{ else }}
+    {{ else with .Value }}
       {{ range (.Content | transform.Unmarshal) }}
         {{ $images = $images | append (dict
           "fileId" .fileId
