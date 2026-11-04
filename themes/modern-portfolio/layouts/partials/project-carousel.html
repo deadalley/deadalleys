@@ -1,0 +1,35 @@
+{{/*
+  Screenshot carousel. Params: images (list of {src, alt}), title, site,
+  large (bool: the bigger carousel in the details modal).
+  With one image it renders a plain frame without controls.
+*/}}
+{{ $multi := gt (len .images) 1 }}
+{{ $title := .title }}
+{{ $site := .site }}
+{{ $large := .large }}
+<div
+  class="project-carousel{{ if $large }} project-carousel-large{{ end }}{{ if $multi }} swiper{{ end }}"
+  {{ if $multi }}role="region" aria-roledescription="carousel" aria-label="{{ $title }} screenshots"{{ end }}
+>
+  <div class="{{ if $multi }}swiper-wrapper{{ else }}project-carousel-single{{ end }}">
+    {{ range $i, $img := .images }}
+    <div class="{{ if $multi }}swiper-slide {{ end }}project-slide">
+      <img
+        src="{{ printf "%s%s" $site.BaseURL $img.src }}"
+        alt="{{ $img.alt | default $title }}"
+        {{ if or $large (gt $i 0) }}loading="lazy"{{ end }}
+        decoding="async"
+      />
+    </div>
+    {{ end }}
+  </div>
+  {{ if $multi }}
+  <button type="button" class="project-carousel-nav project-carousel-prev" aria-label="Previous screenshot">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+  </button>
+  <button type="button" class="project-carousel-nav project-carousel-next" aria-label="Next screenshot">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+  </button>
+  <div class="project-carousel-pagination"></div>
+  {{ end }}
+</div>

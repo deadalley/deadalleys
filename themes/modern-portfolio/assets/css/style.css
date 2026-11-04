@@ -170,93 +170,165 @@ h4:first-child {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* Project Card Styles */
-.project-card {
-  border: 1px solid var(--navy-medium);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+/* Project grid (Development page) ---------------------------------------- */
+.project-grid {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto auto;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Project card ------------------------------------------------------------ */
+.project-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--navy-medium);
   border-radius: 1rem;
   overflow: hidden;
-  /* clip, unlike hidden, keeps the sticky screenshots working */
-  overflow: clip;
-  position: relative;
-  height: fit-content;
+  background: rgba(255, 255, 255, 0.02);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 /* Lift on hover only where there's a real pointer, so swiping on touch screens stays steady. */
 @media (hover: hover) and (pointer: fine) {
   .project-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(53, 53, 53, 0.3);
+    border-color: var(--navy-light);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 }
 
-/* Screenshot carousel: every screenshot is shown whole in a 16:10 frame. */
-.project-card .project-media {
-  min-width: 0;
-  background: #050506;
-  display: flex;
-  align-items: center;
+.project-card:focus-within {
+  border-color: var(--navy-light);
 }
 
+.project-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+}
+
+.project-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.project-card-title .icon {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
+
+/* Card and modal titles are h2s; opt out of the page-level h2 spacing and rule. */
+.project-card-title h2,
+.project-modal-heading .title {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.project-card-title h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.project-card-description {
+  flex: 1;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* The whole card opens the details; carousel controls sit above this layer. */
+.project-card-open {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.project-card-open:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -4px;
+  border-radius: 1rem;
+}
+
+/* Above the card's open button so it can be swiped; a click opens the details. */
+.project-card .project-carousel {
+  z-index: 2;
+  cursor: pointer;
+}
+
+.project-card .project-carousel-nav,
+.project-card .project-carousel-pagination {
+  z-index: 3;
+}
+
+html.project-modal-open {
+  overflow: hidden;
+}
+
+/* Screenshot carousel: every screenshot is shown whole in a 16:10 frame. */
 .project-carousel {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
+  background: #050506;
 }
 
 .project-carousel-single,
-.project-carousel .swiper-wrapper {
-  width: 100%;
-  height: 100%;
-}
-
+.project-carousel .swiper-wrapper,
 .project-slide {
   width: 100%;
   height: 100%;
 }
 
-.project-slide-open {
-  display: block;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: zoom-in;
-}
-
-.project-slide-open img {
+.project-slide img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-.project-slide-open:focus-visible {
-  outline: 2px solid var(--accent-primary);
-  outline-offset: -2px;
-}
-
 .project-carousel-nav {
   position: absolute;
   top: 50%;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin-top: -1.25rem;
+  width: 2rem;
+  height: 2rem;
+  margin-top: -1rem;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 9999px;
   background: rgba(11, 12, 14, 0.75);
   color: var(--text-primary);
   cursor: pointer;
-  transition: background 0.2s ease, opacity 0.2s ease;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .project-carousel-nav:hover {
@@ -269,18 +341,29 @@ h4:first-child {
 }
 
 .project-carousel-prev {
-  left: 0.75rem;
+  left: 0.5rem;
 }
 
 .project-carousel-next {
-  right: 0.75rem;
+  right: 0.5rem;
 }
 
-.project-carousel .project-carousel-pagination.swiper-pagination-bullets {
+/* On cards with a mouse, show the arrows on hover/focus to keep cards calm. */
+@media (hover: hover) and (pointer: fine) {
+  .project-card .project-carousel-nav {
+    opacity: 0;
+  }
+
+  .project-card:hover .project-carousel-nav,
+  .project-card .project-carousel-nav:focus-visible {
+    opacity: 1;
+  }
+}
+
+.project-carousel-pagination.swiper-pagination-bullets {
   position: absolute;
   bottom: 0.5rem;
   left: 50%;
-  z-index: 2;
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -294,192 +377,247 @@ h4:first-child {
 .project-carousel-pagination .swiper-pagination-bullet {
   width: 0.5rem;
   height: 0.5rem;
-  margin: 0 !important;
+  margin: 0;
   background: var(--text-primary);
   opacity: 0.35;
-  /* Bigger hit area than the visible dot */
-  box-shadow: 0 0 0 0.5rem transparent;
 }
 
 .project-carousel-pagination .swiper-pagination-bullet-active {
   opacity: 1;
 }
 
-.project-lightbox.open {
-  display: flex;
+/* Keep the title in view under the screenshots when the modal opens. */
+.project-carousel-large {
+  aspect-ratio: auto;
+  height: min(60vh, 42rem);
 }
 
-.project-lightbox .carousel-nav[hidden] {
+.project-carousel-large .project-carousel-nav {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: -1.25rem;
+}
+
+.project-carousel-large .project-carousel-prev {
+  left: 0.75rem;
+}
+
+.project-carousel-large .project-carousel-next {
+  right: 0.75rem;
+}
+
+/* Tech icons -------------------------------------------------------------- */
+.tech-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tech-icon {
+  position: relative;
+}
+
+.tech-icon.tech-chip {
+  width: auto;
+  height: auto;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.tech-icon.tech-chip::after {
   display: none;
 }
 
-.project-card .icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.75rem;
+/* Details modal ----------------------------------------------------------- */
+.project-modal {
+  width: min(1100px, calc(100vw - 2rem));
+  max-width: none;
+  max-height: 90vh;
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--navy-medium);
+  border-radius: 1rem;
+  background: var(--navy-dark);
+  color: var(--text-primary);
+  overflow: hidden;
 }
 
-.project-card .title {
+.project-modal::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.project-modal[open] {
+  display: flex;
+  animation: project-modal-in 0.2s ease-out;
+}
+
+@keyframes project-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-modal[open] {
+    animation: none;
+  }
+}
+
+.project-modal-inner {
+  position: relative;
+  width: 100%;
+  max-height: inherit;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.project-modal-close {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0.75rem 0.75rem -3.25rem auto;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  background: rgba(11, 12, 14, 0.85);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.project-modal-close:hover {
+  background: var(--navy-medium);
+}
+
+.project-modal-close:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+.project-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.project-modal-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.project-modal-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.project-modal-heading .icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+}
+
+.project-modal-heading .title {
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 700;
   line-height: 1.2;
 }
 
-.project-card .description {
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+.project-modal-heading .description {
+  margin-top: 0.375rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
-.project-card .header .icon {
-  width: 2rem;
-  height: 2rem;
-  margin-right: 1rem;
-}
-
-.project-card .buttons {
+.project-modal .buttons {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 0.75rem;
-  margin-bottom: 1rem;
 }
 
-.project-card .buttons .btn {
+.project-modal .buttons .btn {
   font-size: 0.875rem;
   white-space: nowrap;
 }
 
-.project-card .tech {
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #4b5563;
+.project-modal-sections {
+  display: grid;
+  gap: 1.5rem;
+  color: var(--text-primary);
 }
 
-.project-card .tech-icons {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+.project-modal-sections .prose ul {
+  list-style-position: outside;
+  padding-left: 1.25rem;
 }
 
-.project-card .tech-icon {
-  font-size: 1.125rem;
-}
-
-.project-card .prose ul,
-.project-card .prose ol {
-  list-style-position: inside;
-}
-
-.project-card .prose ul li {
+.project-modal-sections .prose ul li {
   list-style-type: disc;
 }
 
-.project-card .prose ol li {
+.project-modal-sections .prose ol li {
   list-style-type: decimal;
 }
 
-/* Phones and tablets: screenshots full width on top, text below */
-@media (max-width: 767px) {
-  .project-card .content {
-    padding: 1.5rem 1rem;
-  }
+.project-modal-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
-  .project-card .header {
-    margin-bottom: 1.5rem;
-  }
-
-  .project-carousel-nav {
-    width: 2rem;
-    height: 2rem;
-    margin-top: -1rem;
-  }
-
-  .project-carousel-prev {
-    left: 0.5rem;
-  }
-
-  .project-carousel-next {
-    right: 0.5rem;
-  }
+.project-modal-tech {
+  padding-top: 1rem;
+  border-top: 1px solid var(--navy-medium);
 }
 
 @media (min-width: 768px) {
-  .project-card .content {
-    padding: 2rem 2.5rem;
+  .project-modal-content {
+    padding: 2rem 2.5rem 2.5rem;
   }
 
-  .project-card .header {
-    margin-bottom: 3rem;
-  }
-
-  .project-card .header .title {
+  .project-modal-heading .title {
     font-size: 1.875rem;
   }
 
-  .project-card .header .description {
-    font-size: 1rem;
+  .project-modal-sections.has-aside {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    align-items: start;
   }
 
-  .project-card .buttons {
-    flex-direction: row;
-    gap: 1rem;
-    margin-bottom: 0;
-  }
-
-  .project-card .btn {
-    font-size: 1rem;
-  }
-
-  .project-card .tech-icons {
-    gap: 0.75rem;
-  }
-
-  .project-card .tech-icon {
-    font-size: 1.25rem;
-  }
 }
 
-/* Desktop: screenshots and text side by side, alternating sides */
-@media (min-width: 1024px) {
-  .project-card {
-    grid-template-columns: 55% 45%;
-    grid-template-rows: 1fr;
+/* Phones: the modal fills the screen. */
+@media (max-width: 639px) {
+  .project-carousel-large {
+    aspect-ratio: 16 / 10;
+    height: auto;
   }
 
-  .project-card.project-card-reverse {
-    grid-template-columns: 45% 55%;
-  }
-
-  .project-card.project-card-reverse .image {
-    order: 2;
-  }
-
-  .project-card.project-card-reverse .content {
-    order: 1;
-  }
-
-  /* The text column is usually taller, so keep the screenshots in view while reading. */
-  .project-card .project-media {
-    padding: 1.5rem;
-    background: none;
-    align-items: flex-start;
-  }
-
-  .project-card .project-carousel {
-    position: sticky;
-    /* below the fixed site header */
-    top: 5.5rem;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    background: #050506;
-  }
-
-  .project-card .content {
-    padding: 2rem 3rem;
+  .project-modal {
+    width: 100vw;
+    height: 100dvh;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
   }
 }
-
 
 /* Technology Icons Styling */
 .tech-icon {

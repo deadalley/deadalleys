@@ -1,0 +1,62 @@
+{{/* Tech icons. Params: list (technology names), labels (bool: show names). */}}
+{{ $labels := .labels }}
+<ul class="tech-icons" aria-label="Technologies">
+  {{ range .list }}
+  <li class="tech-icon{{ if $labels }} tech-chip{{ end }}" title="{{ . }}">
+    {{ if eq . "nuxt" }}
+    <i aria-hidden="true" class="ti ti-brand-nuxt"></i>
+    {{ else if eq . "vue" }}
+    <i aria-hidden="true" class="ti ti-brand-vue"></i>
+    {{ else if eq . "tailwind" }}
+    <i aria-hidden="true" class="ti ti-brand-tailwind"></i>
+    {{ else if eq . "playwright" }}
+    <i aria-hidden="true" class="ti ti-robot"></i>
+    {{ else if eq . "electron" }}
+    <i aria-hidden="true" class="ti ti-atom"></i>
+    {{ else if eq . "react" }}
+    <i aria-hidden="true" class="ti ti-brand-react"></i>
+    {{ else if or (eq . "node") (eq . "nodejs") }}
+    <i aria-hidden="true" class="ti ti-brand-nodejs"></i>
+    {{ else if eq . "vite" }}
+    <i aria-hidden="true" class="ti ti-brand-vite"></i>
+    {{ else if eq . "echarts" }}
+    <i aria-hidden="true" class="ti ti-chart-bar"></i>
+    {{ else if eq . "express" }}
+    <i aria-hidden="true" class="ti ti-server"></i>
+    {{ else if eq . "redis" }}
+    <i aria-hidden="true" class="ti ti-database"></i>
+    {{ else if eq . "python" }}
+    <i aria-hidden="true" class="ti ti-brand-python"></i>
+    {{ else if eq . "javascript" }}
+    <i aria-hidden="true" class="ti ti-brand-javascript"></i>
+    {{ else if eq . "typescript" }}
+    <i aria-hidden="true" class="ti ti-brand-typescript"></i>
+    {{ else if eq . "html" }}
+    <i aria-hidden="true" class="ti ti-brand-html5"></i>
+    {{ else if eq . "css" }}
+    <i aria-hidden="true" class="ti ti-brand-css3"></i>
+    {{ else if eq . "sass" }}
+    <i aria-hidden="true" class="ti ti-brand-sass"></i>
+    {{ else if eq . "docker" }}
+    <i aria-hidden="true" class="ti ti-brand-docker"></i>
+    {{ else if eq . "git" }}
+    <i aria-hidden="true" class="ti ti-brand-git"></i>
+    {{ else if eq . "github" }}
+    <i aria-hidden="true" class="ti ti-brand-github"></i>
+    {{ else if eq . "mysql" }}
+    <i aria-hidden="true" class="ti ti-database"></i>
+    {{ else if eq . "postgresql" }}
+    <i aria-hidden="true" class="ti ti-database"></i>
+    {{ else if eq . "mongodb" }}
+    <i aria-hidden="true" class="ti ti-database"></i>
+    {{ else if eq . "raspberry pi" }}
+    <i aria-hidden="true" class="ti ti-olympics"></i>
+    {{ else if eq . "dump1090" }}
+    <i aria-hidden="true" class="ti ti-air-traffic-control"></i>
+    {{ else }}
+    <i aria-hidden="true" class="ti ti-code"></i>
+    {{ end }}
+    {{ if $labels }}<span>{{ . }}</span>{{ else }}<span class="sr-only">{{ . }}</span>{{ end }}
+  </li>
+  {{ end }}
+</ul>

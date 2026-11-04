@@ -1,171 +1,113 @@
-{{ $isEven := eq (mod .index 2) 0 }}
+{{/*
+  A compact project card for the development grid, plus its details modal.
+  Params: project (page), Site.
+*/}}
+{{ $p := .project }}
+{{ $site := .Site }}
+{{ $id := $p.Params.id | default $p.File.ContentBaseName | urlize }}
 
-<div class="project-card {{ if not $isEven }}project-card-reverse{{ end }}">
-  {{/* Screenshots: `images` (list of {src, alt}) or the older single `image`. */}}
-  {{ $images := .project.Params.images }}
-  {{ if and (not $images) .project.Params.image }}
-    {{ $images = slice (dict "src" .project.Params.image "alt" .project.Title) }}
-  {{ end }}
-  {{ $multi := gt (len $images) 1 }}
-  <div class="image project-media">
-    <div
-      class="project-carousel{{ if $multi }} swiper{{ end }}"
-      aria-label="{{ .project.Title }} screenshots"
-      {{ if $multi }}role="region" aria-roledescription="carousel"{{ end }}
-    >
-      <div class="{{ if $multi }}swiper-wrapper{{ else }}project-carousel-single{{ end }}">
-        {{ range $i, $img := $images }}
-        {{ $src := printf "%s%s" $.Site.BaseURL $img.src }}
-        <div class="{{ if $multi }}swiper-slide {{ end }}project-slide">
-          <button
-            type="button"
-            class="project-slide-open"
-            data-full="{{ $src }}"
-            aria-label="View larger: {{ $img.alt | default $.project.Title }}"
-          >
-            <img
-              src="{{ $src }}"
-              alt="{{ $img.alt | default $.project.Title }}"
-              {{ if gt $i 0 }}loading="lazy"{{ end }}
-              decoding="async"
-            />
-          </button>
-        </div>
-        {{ end }}
-      </div>
-      {{ if $multi }}
-      <button type="button" class="project-carousel-nav project-carousel-prev" aria-label="Previous screenshot">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
-      </button>
-      <button type="button" class="project-carousel-nav project-carousel-next" aria-label="Next screenshot">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
-      </button>
-      <div class="project-carousel-pagination"></div>
+{{/* Screenshots: `images` (list of {src, alt}) or the older single `image`. */}}
+{{ $images := $p.Params.images }}
+{{ if and (not $images) $p.Params.image }}
+  {{ $images = slice (dict "src" $p.Params.image "alt" $p.Title) }}
+{{ end }}
+
+<article class="project-card" data-project="{{ $id }}">
+  {{ partial "project-carousel.html" (dict "images" $images "title" $p.Title "site" $site) }}
+
+  <div class="project-card-body">
+    <div class="project-card-title">
+      {{ with $p.Params.icon }}
+      <img src="{{ $site.BaseURL }}{{ . }}" alt="" class="icon" loading="lazy" />
       {{ end }}
+      <h2 id="project-{{ $id }}-card-title">{{ $p.Title }}</h2>
     </div>
+    <p class="project-card-description">{{ $p.Params.description }}</p>
+    {{ with $p.Params.technologies }}
+    {{ partial "project-tech.html" (dict "list" .) }}
+    {{ end }}
   </div>
-  <div
-    class="content lg:{{ if $isEven }}text-left{{ else }}text-right{{ end }}"
+
+  {{/* Covers the whole card; the carousel controls sit above it. */}}
+  <button
+    type="button"
+    class="project-card-open"
+    aria-haspopup="dialog"
+    aria-controls="project-{{ $id }}-modal"
+    aria-describedby="project-{{ $id }}-card-title"
   >
-    <div class="header">
-      <div class="flex flex-col gap-4">
-        <div
-          class="flex justify-start lg:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}"
-        >
-          {{ if .project.Params.icon }}
-          <img
-            src="{{ .Site.BaseURL }}{{ .project.Params.icon }}"
-            alt="{{ .project.Title }} Icon"
-            class="icon"
-            loading="lazy"
-            onerror="
-              this.style.display = 'none';
-              this.nextElementSibling.style.display = 'flex';
-            "
-          />
+    <span class="sr-only">View details</span>
+  </button>
+</article>
+
+<dialog
+  class="project-modal"
+  id="project-{{ $id }}-modal"
+  aria-labelledby="project-{{ $id }}-title"
+>
+  <div class="project-modal-inner">
+    <button type="button" class="project-modal-close" aria-label="Close" data-close>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    {{ partial "project-carousel.html" (dict "images" $images "title" $p.Title "site" $site "large" true) }}
+
+    <div class="project-modal-content">
+      <header class="project-modal-header">
+        <div class="project-modal-heading">
+          {{ with $p.Params.icon }}
+          <img src="{{ $site.BaseURL }}{{ . }}" alt="" class="icon" loading="lazy" />
           {{ end }}
-          <h1 class="title">{{ .project.Title }}</h1>
+          <div>
+            <h2 id="project-{{ $id }}-title" class="title">{{ $p.Title }}</h2>
+            <p class="description">{{ $p.Params.description }}</p>
+          </div>
         </div>
-        {{ if or .project.Params.github .project.Params.live_demo }}
-        <div
-          class="buttons lg:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}"
-        >
-          {{ if .project.Params.github }}
-          <a
-            href="{{ .project.Params.github }}"
-            target="_blank"
-            class="btn btn-primary"
-          >
-            <i class="ti ti-brand-github"></i>
+        {{ if or $p.Params.github $p.Params.live_demo }}
+        <div class="buttons">
+          {{ with $p.Params.github }}
+          <a href="{{ . }}" target="_blank" rel="noopener" class="btn btn-primary">
+            <i class="ti ti-brand-github" aria-hidden="true"></i>
             View on GitHub
           </a>
-          {{ end }} {{ if .project.Params.live_demo }}
-          <a
-            href="{{ .project.Params.live_demo }}"
-            target="_blank"
-            class="btn btn-primary"
-          >
-            <i class="ti ti-external-link"></i>
+          {{ end }}
+          {{ with $p.Params.live_demo }}
+          <a href="{{ . }}" target="_blank" rel="noopener" class="btn btn-primary">
+            <i class="ti ti-external-link" aria-hidden="true"></i>
             View Live Demo
           </a>
           {{ end }}
         </div>
         {{ end }}
-      </div>
-      <h5 class="description">{{ .project.Params.description }}</h5>
-    </div>
+      </header>
 
-    <div
-      class="project-prose prose prose-sm max-w-none text-left lg:{{ if not $isEven }}text-right{{ else }}text-left{{ end }}"
-      style="color: var(--text-primary)"
-    >
-      {{ .project.Content }}
-    </div>
-
-    {{ if .project.Params.technologies }}
-    <div class="tech">
-      <div
-        class="tech-icons lg:{{ if $isEven }}justify-start{{ else }}justify-end{{ end }}"
-      >
-        {{ range .project.Params.technologies }}
-        <div class="tech-icon" title="{{ . }}">
-          {{ if eq . "nuxt" }}
-          <i class="ti ti-brand-nuxt"></i>
-          {{ else if eq . "vue" }}
-          <i class="ti ti-brand-vue"></i>
-          {{ else if eq . "tailwind" }}
-          <i class="ti ti-brand-tailwind"></i>
-          {{ else if eq . "playwright" }}
-          <i class="ti ti-robot"></i>
-          {{ else if eq . "electron" }}
-          <i class="ti ti-atom"></i>
-          {{ else if eq . "react" }}
-          <i class="ti ti-brand-react"></i>
-          {{ else if or (eq . "node") (eq . "nodejs") }}
-          <i class="ti ti-brand-nodejs"></i>
-          {{ else if eq . "vite" }}
-          <i class="ti ti-brand-vite"></i>
-          {{ else if eq . "echarts" }}
-          <i class="ti ti-chart-bar"></i>
-          {{ else if eq . "express" }}
-          <i class="ti ti-server"></i>
-          {{ else if eq . "redis" }}
-          <i class="ti ti-database"></i>
-          {{ else if eq . "python" }}
-          <i class="ti ti-brand-python"></i>
-          {{ else if eq . "javascript" }}
-          <i class="ti ti-brand-javascript"></i>
-          {{ else if eq . "typescript" }}
-          <i class="ti ti-brand-typescript"></i>
-          {{ else if eq . "html" }}
-          <i class="ti ti-brand-html5"></i>
-          {{ else if eq . "css" }}
-          <i class="ti ti-brand-css3"></i>
-          {{ else if eq . "sass" }}
-          <i class="ti ti-brand-sass"></i>
-          {{ else if eq . "docker" }}
-          <i class="ti ti-brand-docker"></i>
-          {{ else if eq . "git" }}
-          <i class="ti ti-brand-git"></i>
-          {{ else if eq . "github" }}
-          <i class="ti ti-brand-github"></i>
-          {{ else if eq . "mysql" }}
-          <i class="ti ti-database"></i>
-          {{ else if eq . "postgresql" }}
-          <i class="ti ti-database"></i>
-          {{ else if eq . "mongodb" }}
-          <i class="ti ti-database"></i>
-          {{ else if eq . "raspberry pi" }}
-          <i class="ti ti-olympics"></i>
-          {{ else if eq . "dump1090" }}
-          <i class="ti ti-air-traffic-control"></i>
-          {{ else }}
-          <i class="ti ti-code"></i>
+      {{/* Split the page content at each heading: the first section (usually
+        Features) takes the wide column, the rest go beside it. */}}
+      {{ $sections := slice }}
+      {{ range $i, $chunk := split $p.Content "<h4" }}
+        {{ if strings.TrimSpace $chunk }}
+          {{/* Text before the first heading has no "<h4" to restore. */}}
+          {{ $sections = $sections | append (cond (gt $i 0) (printf "<h4%s" $chunk) $chunk) }}
+        {{ end }}
+      {{ end }}
+      <div class="project-modal-sections{{ if gt (len $sections) 1 }} has-aside{{ end }}">
+        {{ with index $sections 0 }}
+        <section class="project-prose prose prose-sm max-w-none">{{ . | safeHTML }}</section>
+        {{ end }}
+        {{ with after 1 $sections }}
+        <div class="project-modal-aside">
+          {{ range . }}
+          <section class="project-prose prose prose-sm max-w-none">{{ . | safeHTML }}</section>
           {{ end }}
         </div>
         {{ end }}
       </div>
+
+      {{ with $p.Params.technologies }}
+      <footer class="project-modal-tech">
+        {{ partial "project-tech.html" (dict "list" . "labels" true) }}
+      </footer>
+      {{ end }}
     </div>
-    {{ end }}
   </div>
-</div>
+</dialog>
