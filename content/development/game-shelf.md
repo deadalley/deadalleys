@@ -2,7 +2,17 @@
 id: "game-shelf"
 title: "GameShelf"
 description: "All your PC games from every launcher, on one shelf."
-image: "game-shelf.webp"
+images:
+  - src: "projects/game-shelf/flat.webp"
+    alt: "GameShelf showing game covers from every launcher in a grid"
+  - src: "projects/game-shelf/stacked.webp"
+    alt: "GameShelf stacked layout with game spines on wooden shelves, grouped by launcher"
+  - src: "projects/game-shelf/details.webp"
+    alt: "GameShelf game details panel with play time and launch options"
+  - src: "projects/game-shelf/collections.webp"
+    alt: "GameShelf grouped by collection with PlayStation-style cases"
+  - src: "projects/game-shelf/settings.webp"
+    alt: "GameShelf appearance settings with shelf and cover styles"
 icon: "game-shelf-icon.png"
 github: "https://github.com/deadalley/game-shelf"
 weight: 2

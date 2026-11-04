@@ -181,25 +181,136 @@ h4:first-child {
   grid-template-rows: auto auto;
   border-radius: 1rem;
   overflow: hidden;
+  /* clip, unlike hidden, keeps the sticky screenshots working */
+  overflow: clip;
   position: relative;
   height: fit-content;
 }
 
-.project-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 8px 32px rgba(53, 53, 53, 0.3);
+/* Lift on hover only where there's a real pointer, so swiping on touch screens stays steady. */
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(53, 53, 53, 0.3);
+  }
 }
 
-.project-card .image {
-  height: 100%;
+/* Screenshot carousel: every screenshot is shown whole in a 16:10 frame. */
+.project-card .project-media {
+  min-width: 0;
+  background: #050506;
+  display: flex;
+  align-items: center;
 }
 
-.project-card .image img {
+.project-carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
+
+.project-carousel-single,
+.project-carousel .swiper-wrapper {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: left;
-  min-height: 200px;
+}
+
+.project-slide {
+  width: 100%;
+  height: 100%;
+}
+
+.project-slide-open {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.project-slide-open img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.project-slide-open:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+
+.project-carousel-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: -1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  background: rgba(11, 12, 14, 0.75);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.project-carousel-nav:hover {
+  background: rgba(11, 12, 14, 0.95);
+}
+
+.project-carousel-nav:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+.project-carousel-prev {
+  left: 0.75rem;
+}
+
+.project-carousel-next {
+  right: 0.75rem;
+}
+
+.project-carousel .project-carousel-pagination.swiper-pagination-bullets {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  width: auto;
+  padding: 0.375rem 0.625rem;
+  border-radius: 9999px;
+  background: rgba(11, 12, 14, 0.7);
+  transform: translateX(-50%);
+}
+
+.project-carousel-pagination .swiper-pagination-bullet {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin: 0 !important;
+  background: var(--text-primary);
+  opacity: 0.35;
+  /* Bigger hit area than the visible dot */
+  box-shadow: 0 0 0 0.5rem transparent;
+}
+
+.project-carousel-pagination .swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
+.project-lightbox.open {
+  display: flex;
+}
+
+.project-lightbox .carousel-nav[hidden] {
+  display: none;
 }
 
 .project-card .icon {
@@ -234,6 +345,7 @@ h4:first-child {
 
 .project-card .buttons .btn {
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 .project-card .tech {
@@ -267,17 +379,8 @@ h4:first-child {
   list-style-type: decimal;
 }
 
-/* Mobile-first: stacked layout */
+/* Phones and tablets: screenshots full width on top, text below */
 @media (max-width: 767px) {
-  .project-card {
-    grid-template-columns: 1fr;
-  }
-
-  .project-card .image {
-    max-height: 200px;
-    overflow: hidden;
-  }
-
   .project-card .content {
     padding: 1.5rem 1rem;
   }
@@ -285,36 +388,25 @@ h4:first-child {
   .project-card .header {
     margin-bottom: 1.5rem;
   }
+
+  .project-carousel-nav {
+    width: 2rem;
+    height: 2rem;
+    margin-top: -1rem;
+  }
+
+  .project-carousel-prev {
+    left: 0.5rem;
+  }
+
+  .project-carousel-next {
+    right: 0.5rem;
+  }
 }
 
-/* Desktop: side-by-side layout */
 @media (min-width: 768px) {
-  .project-card {
-    grid-template-columns: 40% 60%;
-    grid-template-rows: 1fr;
-  }
-
-  .project-card .image img {
-    width: auto;
-    height: 100%;
-    min-height: 300px;
-    object-position: left;
-  }
-
-  .project-card.project-card-reverse {
-    grid-template-columns: 60% 40%;
-  }
-
-  .project-card.project-card-reverse .image {
-    order: 2;
-  }
-
-  .project-card.project-card-reverse .content {
-    order: 1;
-  }
-
   .project-card .content {
-    padding: 2rem 4rem;
+    padding: 2rem 2.5rem;
   }
 
   .project-card .header {
@@ -347,6 +439,47 @@ h4:first-child {
     font-size: 1.25rem;
   }
 }
+
+/* Desktop: screenshots and text side by side, alternating sides */
+@media (min-width: 1024px) {
+  .project-card {
+    grid-template-columns: 55% 45%;
+    grid-template-rows: 1fr;
+  }
+
+  .project-card.project-card-reverse {
+    grid-template-columns: 45% 55%;
+  }
+
+  .project-card.project-card-reverse .image {
+    order: 2;
+  }
+
+  .project-card.project-card-reverse .content {
+    order: 1;
+  }
+
+  /* The text column is usually taller, so keep the screenshots in view while reading. */
+  .project-card .project-media {
+    padding: 1.5rem;
+    background: none;
+    align-items: flex-start;
+  }
+
+  .project-card .project-carousel {
+    position: sticky;
+    /* below the fixed site header */
+    top: 5.5rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: #050506;
+  }
+
+  .project-card .content {
+    padding: 2rem 3rem;
+  }
+}
+
 
 /* Technology Icons Styling */
 .tech-icon {

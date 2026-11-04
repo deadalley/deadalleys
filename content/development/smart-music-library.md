@@ -2,7 +2,15 @@
 id: "smart-music-library"
 title: "Smart Music Library"
 description: "Smart playlist manager for your Spotify and YouTube Music library."
-image: "smart-music-library.webp"
+images:
+  - src: "projects/smart-music-library/preview-4.webp"
+    alt: "Smart Music Library saved tracks view"
+  - src: "projects/smart-music-library/preview-1.webp"
+    alt: "Smart Music Library playlists view"
+  - src: "projects/smart-music-library/preview-2.webp"
+    alt: "Smart Music Library playlist genre analysis"
+  - src: "projects/smart-music-library/preview-3.webp"
+    alt: "Smart Music Library artists view"
 icon: "smart-music-library.svg"
 github: "https://github.com/deadalley/smart-music-library"
 weight: 3
