@@ -1,5 +1,5 @@
 baseURL = "https://deadalley.github.io/deadalleys/"
-languageCode = "en-us"
+locale = "en-us"
 title = "deadalleys."
 theme = "modern-portfolio"
 
@@ -50,9 +50,13 @@ unsafe = true
 [security]
 
 [security.funcs]
-getenv = ["^IMAGEKIT_API_KEY$"]
+getenv = ["^IMAGEKIT_API_KEY$", "^GITHUB_ACTIONS$"]
 
 [caches]
 
 [caches.images]
 dir = ':cacheDir/images'
+
+[caches.getresource]
+dir = ':cacheDir/:project'
+maxAge = 0

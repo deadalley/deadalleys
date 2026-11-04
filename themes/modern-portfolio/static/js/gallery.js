@@ -5,14 +5,12 @@
 
 class Gallery {
   constructor(config) {
-    this.folder = config.folder;
-    this.tags = config.tags;
+    this.images = config.images;
     this.filterTags = config.filterTags || [];
     this.enablePagination = config.enablePagination !== false;
     this.baseURL = config.baseURL;
     this.thumbnailTransform = config.thumbnailTransform;
     this.fullTransform = config.fullTransform;
-    this.apiKey = config.apiKey;
 
     this.loadingMessage = document.getElementById("loading-message");
     this.noResultsMessage = document.getElementById("no-results-message");
@@ -29,45 +27,13 @@ class Gallery {
     this.initializeCarousel();
   }
 
-  async loadImages() {
+  loadImages() {
     try {
-      let apiUrl;
-
-      if (this.folder) {
-        if (this.tags && this.tags.length > 0) {
-          const tagsQuery = this.tags.map((tag) => `"${tag}"`).join(", ");
-          const searchQuery = `path:"/${this.folder}/" AND tags IN [${tagsQuery}]`;
-          apiUrl = `https://api.imagekit.io/v1/files?searchQuery=${encodeURIComponent(
-            searchQuery,
-          )}&fileType=image`;
-        } else {
-          apiUrl = `https://api.imagekit.io/v1/files?path=${encodeURIComponent(
-            this.folder,
-          )}&includeFolder=false&fileType=image`;
-        }
-      } else if (this.tags && this.tags.length > 0) {
-        const tagsQuery = this.tags.join(",");
-        apiUrl = `https://api.imagekit.io/v1/files?tags=${encodeURIComponent(
-          tagsQuery,
-        )}&includeFolder=false&fileType=image`;
-      } else {
-        return;
-      }
-
-      const response = await fetch(apiUrl, {
-        headers: {
-          Authorization: `Basic ${btoa(this.apiKey + ":")}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
-      }
-
-      const files = await response.json();
+      const files = this.images;
       const imageFiles = this.filterImageFiles(files);
 
       if (imageFiles.length === 0) {
+        this.hideLoadingMessage();
         this.showNoImagesMessage();
         return;
       }
@@ -399,28 +365,17 @@ class GalleryConfig {
   static get() {
     const localConfig = window.galleryConfig || {};
     return {
-      folder: localConfig.folder || "",
-      tags: localConfig.tags || [],
+      images: Array.isArray(localConfig.images) ? localConfig.images : [],
       filterTags: localConfig.filterTags || [],
       enablePagination: localConfig.enablePagination !== false,
       baseURL: localConfig.baseURL || "",
       thumbnailTransform: localConfig.thumbnailTransform || "",
       fullTransform: localConfig.fullTransform || "",
-      apiKey: localConfig.apiKey || "",
     };
   }
 
   static validate(config) {
-    if (!config.apiKey) {
-      console.warn("ImageKit API key not configured.");
-      const loadingMessage = document.getElementById("loading-message");
-      if (loadingMessage) {
-        loadingMessage.innerHTML =
-          '<p class="text-yellow-400">⚠️ ImageKit API key not configured.</p>';
-      }
-      return false;
-    }
-    return true;
+    return Array.isArray(config.images);
   }
 }
 

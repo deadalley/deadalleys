@@ -4,10 +4,9 @@
 <section>
   <div class="container mx-auto px-6 relative z-10">
     {{ if .Pages }}
-    <!-- Projects content will go here -->
-    <div class="flex flex-col gap-8">
-      {{ range $index, $project := .Pages }}
-      {{ partial "project-card.html" (dict "project" $project "index" $index "Site" $.Site) }}
+    <div class="project-grid">
+      {{ range .Pages }}
+      {{ partial "project-card.html" (dict "project" . "Site" $.Site) }}
       {{ end }}
     </div>
     {{ else }}
@@ -23,4 +22,7 @@
     </div>
   </div>
 </section>
+{{ with resources.Get "js/project-carousel.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+{{ end }}
 {{ end }}

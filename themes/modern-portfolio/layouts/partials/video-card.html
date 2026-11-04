@@ -1,7 +1,8 @@
 {{/* Video Card Partial — displays an embedded YouTube video with metadata */}}
 
 <div
-  class="bg-gray-900 rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full flex flex-col group"
+  style="background-color: var(--navy-medium)"
+  class="rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full flex flex-col group"
 >
   <!-- Thumbnail / Embed — clicking opens video in new tab -->
   <a
@@ -46,14 +47,14 @@
 
     <!-- Description -->
     {{ if .description }}
-    <p class="text-gray-300 text-sm mb-4 flex-grow line-clamp-3">
+    <p class="text-sm mb-4 flex-grow line-clamp-3" style="color: var(--text-secondary)">
       {{ .description }}
     </p>
     {{ end }}
 
     <!-- Date -->
     {{ if .publishedDate }}
-    <div class="flex items-center text-gray-400 text-xs mt-auto">
+    <div class="flex items-center text-xs mt-auto" style="color: var(--text-muted)">
       <i class="far fa-calendar mr-2"></i>
       <span>{{ .publishedDate }}</span>
     </div>

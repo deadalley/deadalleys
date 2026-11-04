@@ -1,24 +1,67 @@
-{{ $baseURL := "https://ik.imagekit.io/deadalley31" }} {{ $thumbnailTransform :=
-"?tr=w-400,h-400,c-at_max,q-80,f-auto" }} {{ $fullTransform :=
-"?tr=w-1920,q-85,f-auto" }} {{ $folder := .folder | default "" }} {{ $tags :=
-.tags | default slice }} {{ $filterTags := .filterTags | default slice }} {{
-$enablePagination := .enablePagination | default true }}
+{{/*
+  Lists the gallery's images at build time through the ImageKit Media API and
+  embeds the result in the page. The API needs the private key and does not
+  allow browser (CORS) requests, so the key must never reach the page.
+*/}}
+{{ $baseURL := "https://ik.imagekit.io/deadalley31" }}
+{{ $thumbnailTransform := "?tr=w-400,h-400,c-at_max,q-80,f-auto" }}
+{{ $fullTransform := "?tr=w-1920,q-85,f-auto" }}
+{{ $folder := .folder | default "" }}
+{{ $tags := .tags | default slice }}
+{{ $filterTags := .filterTags | default slice }}
+{{ $enablePagination := .enablePagination | default true }}
+
+{{ $apiURL := "" }}
+{{ if $folder }}
+  {{ if $tags }}
+    {{ $quoted := slice }}
+    {{ range $tags }}{{ $quoted = $quoted | append (printf "%q" .) }}{{ end }}
+    {{ $query := printf "path:\"/%s/\" AND tags IN [%s]" $folder (delimit $quoted ", ") }}
+    {{ $apiURL = printf "https://api.imagekit.io/v1/files?searchQuery=%s&fileType=image&limit=1000" (urlquery $query) }}
+  {{ else }}
+    {{ $apiURL = printf "https://api.imagekit.io/v1/files?path=%s&includeFolder=false&fileType=image&limit=1000" (urlquery $folder) }}
+  {{ end }}
+{{ else if $tags }}
+  {{ $apiURL = printf "https://api.imagekit.io/v1/files?tags=%s&includeFolder=false&fileType=image&limit=1000" (urlquery (delimit $tags ",")) }}
+{{ end }}
+
+{{/* The deploy build (GitHub Actions) fails rather than publishing empty
+  galleries, so the previous deploy stays live. Local builds only warn. */}}
+{{ $strict := eq (getenv "GITHUB_ACTIONS") "true" }}
+{{ $images := slice }}
+{{ $apiKey := getenv "IMAGEKIT_API_KEY" }}
+{{ if and $apiURL $apiKey }}
+  {{ $auth := printf "Basic %s" (base64Encode (printf "%s:" $apiKey)) }}
+  {{ with try (resources.GetRemote $apiURL (dict "headers" (dict "Authorization" $auth))) }}
+    {{ with .Err }}
+      {{ $msg := printf "ImageKit: could not list images for %q: %s" $folder . }}
+      {{ if $strict }}{{ errorf "%s" $msg }}{{ else }}{{ warnf "%s" $msg }}{{ end }}
+    {{ else with .Value }}
+      {{/* The API returns a top-level JSON array, which Hugo can't sniff, so name the format */}}
+      {{ range (.Content | transform.Unmarshal (dict "format" "json")) }}
+        {{ $images = $images | append (dict
+          "fileId" .fileId
+          "name" .name
+          "url" .url
+          "fileType" .fileType
+          "tags" (.tags | default slice)
+          "createdAt" .createdAt
+        ) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ else if $apiURL }}
+  {{ $msg := printf "ImageKit: IMAGEKIT_API_KEY is not set, the %q gallery will be empty" $folder }}
+  {{ if $strict }}{{ errorf "%s" $msg }}{{ else }}{{ warnf "%s" $msg }}{{ end }}
+{{ end }}
 
 <script>
-  // Inject environment variable into browser
-  window.IMAGEKIT_API_KEY = '{{ getenv "IMAGEKIT_API_KEY" }}';
-</script>
-
-<script>
-  // Gallery configuration
   window.galleryConfig = {
-    folder: '{{ $folder }}',
-    tags: {{ $tags | jsonify | safeJS }},
+    images: {{ $images | jsonify | safeJS }},
     filterTags: {{ $filterTags | jsonify | safeJS }},
     enablePagination: {{ $enablePagination | jsonify | safeJS }},
     baseURL: '{{ $baseURL }}',
     thumbnailTransform: '{{ $thumbnailTransform }}',
-    fullTransform: '{{ $fullTransform }}',
-    apiKey: window.IMAGEKIT_API_KEY || ''
+    fullTransform: '{{ $fullTransform }}'
   };
 </script>

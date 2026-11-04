@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}">
+<html lang="{{ .Site.Language.Locale }}">
 
 <head>
   <meta charset="UTF-8">
@@ -19,10 +19,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- Tabler Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
-  <!-- Swiper CSS for carousel -->
+  <!-- Swiper CSS for carousel (before the theme CSS so the theme can override it) -->
   <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
+  <!-- Custom CSS, fingerprinted so browsers never use a stale copy -->
+  {{ with resources.Get "css/style.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+  {{ end }}
 </head>
 
 <body class="text-gray-100{{ if .IsHome }} home-page{{ end }}" style="background-color: var(--navy-dark);">
